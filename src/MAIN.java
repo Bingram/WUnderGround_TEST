@@ -10,6 +10,6 @@ public class MAIN {
     private aRGBConverter myImageReader;
 
     public static void main(String[] args){
-
+        //TESTING Git
     }
 }
