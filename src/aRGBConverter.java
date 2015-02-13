@@ -3,6 +3,8 @@ import java.awt.image.DataBufferByte;
 
 /**
  * Created by Brian on 2/11/2015.
+ *
+ * Creates a 2D array of integer values from a given buffered image.
  */
 
 /*http://stackoverflow.com/a/9470843*/
