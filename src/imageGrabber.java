@@ -14,6 +14,7 @@ import java.net.URL;
 public class imageGrabber {
 
     private int[][] myConvertedImageArray;
+    private int myImageWidth,myImageHeight;
 
     private aRGBConverter myConverter;
 
@@ -45,7 +46,20 @@ public class imageGrabber {
 
     }
 
+    private void getImageSize(BufferedImage image){
+        myImageWidth = image.getWidth();
+        myImageHeight = image.getHeight();
+    }
+
     public int[][] getImageArray(){
         return myConvertedImageArray;
+    }
+
+    public int getMyImageWidth() {
+        return myImageWidth;
+    }
+
+    public int getMyImageHeight() {
+        return myImageHeight;
     }
 }
