@@ -52,6 +52,10 @@ public class MAIN {
             //myGrabber.getImageFromURL(imageSourceClear);
             myGrabber.getImageFromURL(imageSourceFull);
 
+            MidPointCircle circle1 = new MidPointCircle(640, 480);
+
+            circle1.createImageFile();
+
             //NOTE
             /*The scale for lat is 1' for ~111,000m@4decimals
             * The scale for long is 1' for ~76,000m@5decimals
