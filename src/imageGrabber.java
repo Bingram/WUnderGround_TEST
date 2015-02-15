@@ -30,17 +30,18 @@ public class imageGrabber {
         myOriginal = null;
     }
 
-    public void getImageFromURL(String theUrl) throws IOException {
+    public void getImageFromURL(String theUrl, CircleBoundary theCircle) throws IOException {
 
         URL imageURL = new URL(theUrl);
         BufferedImage originalImage= ImageIO.read(imageURL);
-
 
         if(originalImage==null){
             System.out.println("no image returned");
 
         } else {
             myConvertedImageArray = myConverter.get2DArray(originalImage);
+            /*addBoundary(theCircle, myConverter.get2DArray(originalImage));*/
+            addBoundary(theCircle,originalImage);
         }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -53,15 +54,18 @@ public class imageGrabber {
 
     }
 
-    public void addBoundary(CircleBoundary circle){
-        BufferedImage temp = new BufferedImage(639,479, BufferedImage.TYPE_INT_ARGB);
+    public void addBoundary(CircleBoundary circle, BufferedImage theImage){
+        BufferedImage temp = theImage;
 
-        for (int x = 0; x < myImageHeight; x++) {
-            for (int y = 0; y < myImageWidth; y++) {
 
-                temp.setRGB(x, y, myConvertedImageArray[x][y]);
+
+        /*for (int x = 0; x < theImage.getHeight(); x++) {
+            for (int y = 0; y < theImage.getWidth(); y++) {
+                //rebuild image from array to new bufferedimage
+                temp.setRGB(x, y, theImage.getRGB(x,y));
             }
-        }
+        }*/
+
 
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

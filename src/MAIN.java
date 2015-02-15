@@ -63,19 +63,21 @@ public class MAIN {
         try {
             //attempt to grab image, file test.png is output
             //myGrabber.getImageFromURL(imageSourceClear);
-            myGrabber.getImageFromURL(imageSourceFull);
+            myCenter = gpsToXY(myLong, myLat);
 
-            myMap = myGrabber.getImageArray();
+            radiusOne = new CircleBoundary(myCenter.getMyY(),myCenter.getMyX(),100);
 
-            myCenter = gpsToXY(myLat, myLong);
+            myGrabber.getImageFromURL(imageSourceFull,radiusOne);
+
+            //myMap = myGrabber.getImageArray();
+
+
 
             //DIAG
             System.out.println("GPS Center: Lat|"+ myLat +" Lon|" + myLong +"\nMap Center: X|" + myCenter.getMyX() + " Y|" + myCenter.getMyY());
 
-            radiusOne = new CircleBoundary(myCenter.getMyY(),myCenter.getMyX(),100);
 
 
-            myGrabber.addBoundary(radiusOne);
 
 
 
@@ -130,14 +132,19 @@ public class MAIN {
     *
     * lat is y
     * lon is x*/
-    private static Point gpsToXY(Double lat, Double lon){
+    private static Point gpsToXY(Double lon, Double lat){
         Point temp = new Point();
 
         Double xLonOffset = 0.009375;
         Double yLatOffset = 0.00875;
 
-        temp.setMyX((int) ((myMaxLong - lon)*xLonOffset));
-        temp.setMyY((int) ((myMaxLat - lat)*yLatOffset));
+        System.out.println("Inside gpsToXY...");
+        System.out.println("Input: Lat|" + lat + " Lon|" + lon);
+        System.out.println("Start Point: Lat|" + myMaxLat + " Lon|" + myMinLong);
+        System.out.println("Difference: Lat|" + (myMaxLat-lat) + " Lon|" + (lon-myMinLong));
+
+        temp.setMyX((int) ((myMinLong - lon)/xLonOffset));
+        temp.setMyY((int) ((myMaxLat - lat)/yLatOffset));
 
         return temp;
     }

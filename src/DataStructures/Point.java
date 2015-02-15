@@ -29,7 +29,7 @@ public class Point{
     }
 
     public void setMyX(int x) {
-        this.myY = x;
+        this.myX = x;
     }
 
     public int getMyY() {
