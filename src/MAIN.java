@@ -1,4 +1,8 @@
+import DataStructures.CircleBoundary;
+import DataStructures.Point;
+
 import java.io.IOException;
+import java.util.LinkedList;
 
 /**
  * Created by Brian on 2/11/2015.
@@ -10,27 +14,35 @@ import java.io.IOException;
 public class MAIN {
 
 
+    private static imageGrabber myGrabber = new imageGrabber();
+
+
+    private static Double myLat = 47.6334;
+    //GPS accuracy within 19m
+    private static Double myLong = -122.70609;
+    //not calculating accuracy for min/max
+    //tested....now calculating for the min/max
+    private static Double accuracy = 19.0;
+    private static Double width = accuracy/2;
+    //old accuracy wrong, i now know the values used in
+    //the URL are for setting the bounds not the center
+
+    //new margins based on testing using Googlemaps
+    private static Double marginLong = 3.0;
+    private static Double marginLat = 2.1;
+
+    private static Double myMinLat,myMinLong,myMaxLat,myMaxLong;
+
+    private static Point myCenter;
+
+    private static CircleBoundary radiusOne;
+
+    private static int[][] myMap;
+
 
     public static void main(String[] args){
 
-        imageGrabber myGrabber = new imageGrabber();
 
-
-        Double myLat = 47.6334;
-        //GPS accuracy within 19m
-        Double myLong = -122.70609;
-        //not calculating accuracy for min/max
-        //tested....now calculating for the min/max
-        Double accuracy = 19.0;
-        Double width = accuracy/2;
-        //old accuracy wrong, i now know the values used in
-        //the URL are for setting the bounds not the center
-
-        //new margins based on testing using Googlemaps
-        Double marginLong = 3.0;
-        Double marginLat = 2.1;
-
-        Double myMinLat,myMinLong,myMaxLat,myMaxLong;
 
         //calculate max/min using width for URL request
         myMaxLat = myLat+marginLat;
@@ -38,6 +50,7 @@ public class MAIN {
         myMinLat = myLat-marginLat;
         myMinLong = myLong-marginLong;
 
+        myMap = new int[640][480];
 
         String imageSourceClear = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat=" + myMaxLat +
                 "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=640&height=480&rainsnow=1&timelabel=1&timelabel.x=525&timelabel.y=41&reproj.automerc=1";
@@ -52,9 +65,24 @@ public class MAIN {
             //myGrabber.getImageFromURL(imageSourceClear);
             myGrabber.getImageFromURL(imageSourceFull);
 
-            MidPointCircle circle1 = new MidPointCircle(640, 480);
+            myMap = myGrabber.getImageArray();
 
-            circle1.createImageFile();
+            myCenter = gpsToXY(myLat, myLong);
+
+            //DIAG
+            System.out.println("GPS Center: Lat|"+ myLat +" Lon|" + myLong +"\nMap Center: X|" + myCenter.getMyX() + " Y|" + myCenter.getMyY());
+
+            radiusOne = new CircleBoundary(myCenter.getMyX(),myCenter.getMyY(),100);
+
+
+            myGrabber.addBoundary(radiusOne);
+
+
+
+
+            //MidPointCircle circle1 = new MidPointCircle(640, 480);
+
+            //circle1.createImageFile();
 
             //NOTE
             /*The scale for lat is 1' for ~111,000m@4decimals
@@ -83,5 +111,29 @@ public class MAIN {
             e.printStackTrace();
         }
 
+    }
+
+    private static boolean checkWeatherQuad(){
+        boolean result = false;
+
+
+
+        return result;
+    }
+
+    /*The scale for lat is 1' for ~111,000m@4decimals
+    * The scale for long is 1' for ~76,000m@5decimals
+    * .0001' lat = 11.1m~33ft
+    * .00001' long = 0.76m~2.28ft
+    * pixels currently @480 = .00875' lat per pixel
+    * pixels currently @640 = .009375' long per pixel*/
+    private static Point gpsToXY(Double lat, Double lon){
+        Point temp = new Point();
+
+
+        temp.setMyX((int) (myMaxLat - lat));
+        temp.setMyY((int) (myMaxLong - lon));
+
+        return temp;
     }
 }
