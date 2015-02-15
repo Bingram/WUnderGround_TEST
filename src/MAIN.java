@@ -72,7 +72,7 @@ public class MAIN {
             //DIAG
             System.out.println("GPS Center: Lat|"+ myLat +" Lon|" + myLong +"\nMap Center: X|" + myCenter.getMyX() + " Y|" + myCenter.getMyY());
 
-            radiusOne = new CircleBoundary(myCenter.getMyX(),myCenter.getMyY(),100);
+            radiusOne = new CircleBoundary(myCenter.getMyY(),myCenter.getMyX(),100);
 
 
             myGrabber.addBoundary(radiusOne);
@@ -126,13 +126,18 @@ public class MAIN {
     * .0001' lat = 11.1m~33ft
     * .00001' long = 0.76m~2.28ft
     * pixels currently @480 = .00875' lat per pixel
-    * pixels currently @640 = .009375' long per pixel*/
+    * pixels currently @640 = .009375' long per pixel
+    *
+    * lat is y
+    * lon is x*/
     private static Point gpsToXY(Double lat, Double lon){
         Point temp = new Point();
 
+        Double xLonOffset = 0.009375;
+        Double yLatOffset = 0.00875;
 
-        temp.setMyX((int) (myMaxLat - lat));
-        temp.setMyY((int) (myMaxLong - lon));
+        temp.setMyX((int) ((myMaxLong - lon)*xLonOffset));
+        temp.setMyY((int) ((myMaxLat - lat)*yLatOffset));
 
         return temp;
     }
