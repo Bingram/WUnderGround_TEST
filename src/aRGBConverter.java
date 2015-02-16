@@ -14,6 +14,13 @@ public class aRGBConverter {
 
     }
 
+    /**
+     * Accepts BufferedImage and reads the byte stream,
+     * then converting each pixel value to a 2D array.
+     *
+     * @param image BufferedImage
+     * @return int[][]
+     */
     public int[][] get2DArray(BufferedImage image){
 
         final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
