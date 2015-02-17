@@ -40,11 +40,11 @@ public class MAIN {
         mapWidth = 1582;
         mapHeight = 1676;
 
-        degreesWide = myMaxLong - myMinLong;
-        degreesTall = myMaxLat - myMinLat;
+        degreesWide = myMaxLong - myMinLong;//8.7
+        degreesTall = myMaxLat - myMinLat;//6.4
 
-        scaleLat = degreesWide/mapWidth;
-        scaleLon = degreesTall/mapHeight;
+        scaleLon = degreesWide/mapWidth;
+        scaleLat = degreesTall/mapHeight;
 
         String imageSourceClear = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat=" + myMaxLat +
                 "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + mapWidth + "&height=" + mapHeight + "&rainsnow=1&timelabel=1&timelabel.x=525&timelabel.y=41&reproj.automerc=1";
@@ -93,13 +93,16 @@ public class MAIN {
     private static Point gpsToXY(Double lon, Double lat){
         Point temp = new Point();
 
+        Double latDiff = myMaxLat - lat;
+        Double lonDiff = myMaxLong - lon;
+
         System.out.println("Inside gpsToXY...");
         System.out.println("Input: Lat|" + lat + " Lon|" + lon);
         System.out.println("Start Point: Lat|" + myMaxLat + " Lon|" + myMinLong);
-        System.out.println("Difference: Lat|" + (myMaxLat-lat) + " Lon|" + (myMaxLong - lon));
+        System.out.println("Difference: Lat|" + latDiff + " Lon|" + lonDiff);
 
-        temp.setMyY((int) ((myMaxLat - lat) / scaleLat));
-        temp.setMyX((int) ((myMaxLong - lon) / scaleLon));
+        temp.setMyY((int) ((latDiff) / scaleLat));
+        temp.setMyX((int) ((lonDiff) / scaleLon));
 
         System.out.println("XY Values: X|" + temp.getMyX() + " Y|" + temp.getMyY());
         System.out.println();
