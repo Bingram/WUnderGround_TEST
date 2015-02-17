@@ -16,38 +16,48 @@ public class MAIN {
 
     private static Double myLat = 47.6334;
 
-    private static Double myLong = -122.70609;
+    private static Double myLong = -121.70609;
 
     //new margins based on testing using Googlemaps
-    private static Double marginLong = 3.0;
-    private static Double marginLat = 2.1;
+    /*private static Double marginLong = 3.0;
+    private static Double marginLat = 2.1;*/
 
-    private static Double myMinLat,myMinLong,myMaxLat,myMaxLong;
+    private static Double myMaxLat = 49.0;//Just North of border WA
+    private static Double myMaxLong = -116.8;//Just East of border WA
+    private static Double myMinLat = 42.6;//Halfway into OR South
+    private static Double myMinLong = -125.5;//A few miles of West coast WA
+
+    private static Double degreesWide,degreesTall,scaleLat,scaleLon;
 
     private static Point myCenter;
 
     private static CircleBoundary radiusOne;
 
+    private static int mapWidth,mapHeight;
+
     public static void main(String[] args){
 
-        //calculate max/min using width for URL request
-        myMaxLat = myLat+marginLat;
-        myMaxLong = myLong+marginLong;
-        myMinLat = myLat-marginLat;
-        myMinLong = myLong-marginLong;
+        mapWidth = 1582;
+        mapHeight = 1676;
+
+        degreesWide = myMaxLong - myMinLong;
+        degreesTall = myMaxLat - myMinLat;
+
+        scaleLat = degreesWide/mapWidth;
+        scaleLon = degreesTall/mapHeight;
 
         String imageSourceClear = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat=" + myMaxLat +
-                "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=640&height=480&rainsnow=1&timelabel=1&timelabel.x=525&timelabel.y=41&reproj.automerc=1";
+                "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + mapWidth + "&height=" + mapHeight + "&rainsnow=1&timelabel=1&timelabel.x=525&timelabel.y=41&reproj.automerc=1";
 
         String imageSourceFull = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat=" + myMaxLat +
-                "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=640&height=480&newmaps=1";
+                "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + mapWidth + "&height=" + mapHeight + "&newmaps=1";
 
         System.out.println("Clear Image URL: "+imageSourceClear);
         System.out.println("Full Image URL: "+imageSourceFull);
         try {
             //attempt to grab image, file test.png is output
 
-            myCenter = gpsToXY(myLat, myLong);
+            myCenter = gpsToXY(myLong,myLat);
 
             radiusOne = new CircleBoundary(myCenter.getMyY(),myCenter.getMyX(),100);
 
@@ -80,19 +90,16 @@ public class MAIN {
     *
     * lat is y
     * lon is x*/
-    private static Point gpsToXY(Double lat, Double lon){
+    private static Point gpsToXY(Double lon, Double lat){
         Point temp = new Point();
-
-        Double xLonOffset = 0.009375;
-        Double yLatOffset = 0.00875;
 
         System.out.println("Inside gpsToXY...");
         System.out.println("Input: Lat|" + lat + " Lon|" + lon);
         System.out.println("Start Point: Lat|" + myMaxLat + " Lon|" + myMinLong);
-        System.out.println("Difference: Lat|" + (myMaxLat-lat) + " Lon|" + (lon - myMinLong));
+        System.out.println("Difference: Lat|" + (myMaxLat-lat) + " Lon|" + (myMaxLong - lon));
 
-        temp.setMyX((int) ((myMaxLat - lat)/yLatOffset));
-        temp.setMyY((int) ((lon - myMinLong) / xLonOffset));
+        temp.setMyY((int) ((myMaxLat - lat) / scaleLat));
+        temp.setMyX((int) ((myMaxLong - lon) / scaleLon));
 
         System.out.println("XY Values: X|" + temp.getMyX() + " Y|" + temp.getMyY());
         System.out.println();

@@ -75,15 +75,37 @@ public class weatherMap {
         //modify temp image with boundary
         LinkedList<Point> tempList = circle.getMyPoints();
 
+        //Draw a line column @ width
+        int height = myOriginal.getHeight();
+        int width = myOriginal.getWidth();
+
+        for(int i = 0; i < height; i++){
+            temp.setRGB(width/3,i,Color.RED.getRGB());
+        }
+        for(int i = 0; i < width; i++){
+            temp.setRGB(i,height/5,Color.RED.getRGB());
+        }
+
         for(int i = 0; i < tempList.size(); i++){
                 Point p = tempList.get(i);
 
                 int x = p.getMyX();
                 int y = p.getMyY();
 
-                temp.setRGB(x, y, Color.RED.getRGB());
+                try {
 
-                myWorkingImageArray[x][y] = Color.RED.getRGB();
+                    temp.setRGB(x, y, Color.RED.getRGB());
+                    myWorkingImageArray[x][y] = Color.RED.getRGB();
+                } catch (Exception e){
+                    System.err.println("Array size Width: " + myWorkingImageArray[0].length +" and Height: " + myWorkingImageArray.length);
+                    System.err.println();
+                    System.err.println("Error: "+e.toString()+" at point: " + p.getMyX()+"," +p.getMyY());
+                    System.err.println("Error: "+e.toString()+" at point: " + x+"," +y);
+                    System.err.println();
+                    System.err.println("");
+                    System.err.println();
+                }
+
 
         }
 
