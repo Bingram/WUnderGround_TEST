@@ -19,10 +19,9 @@ import java.util.LinkedList;
 public class weatherMap {
 
     private int[][] myOriginalConvertedImageArray;
-    private int[][] myWorkingImageArray;
     private LinkedList<CircleBoundary> myCircles;
     private int myImageWidth,myImageHeight;
-    private BufferedImage myOriginal;
+    private BufferedImage myMapImage,boundaryImage;
 
     private String myName;
 
@@ -36,39 +35,58 @@ public class weatherMap {
         myOriginalConvertedImageArray = new int[0][0];
         myConverter = new aRGBConverter();
         myCircles = new LinkedList<CircleBoundary>();
-        myOriginal = null;
+        myMapImage = null;
         myName = theName;
     }
 
-    public void getImageFromURL(String theUrl, CircleBoundary theCircle) throws IOException {
+    public void getImageFromURL(String theUrl) throws IOException {
 
-        URL imageURL = new URL(theUrl);
+        try {
 
-        BufferedImage originalImage = myOriginal= ImageIO.read(imageURL);
+            URL imageURL = new URL(theUrl);
 
-        if(originalImage==null){
+            myMapImage = ImageIO.read(imageURL);
+
+            writeImageFile(myMapImage,"original");
+
+        } catch (Exception e){
             System.out.println("no image returned");
-
-        } else {
-            myOriginalConvertedImageArray = myConverter.get2DArray(originalImage);
-
-            myWorkingImageArray = myOriginalConvertedImageArray.clone();
-
-            addBoundary(theCircle);
+            System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
+                    "encountered an Error \nERROR:: " + e.toString());
         }
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(originalImage, "png", baos );
-
-        //Persist - in this case to a file
-        FileOutputStream fos = new FileOutputStream(new File("test.png"));
-        baos.writeTo(fos);
-        fos.close();
 
     }
 
+    public void writeImageFile(BufferedImage theImage,String fileName) throws IOException{
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(theImage, "png", baos );
+
+            //Persist - in this case to a file for later reference
+            FileOutputStream fos = new FileOutputStream(new File(fileName+".png"));
+            baos.writeTo(fos);
+            fos.close();
+        } catch (Exception e){
+            System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
+                                                "encountered an Error \nERROR:: " + e.toString());
+        }
+
+    }
+
+    /*public void test(){
+
+        myOriginalConvertedImageArray = myConverter.get2DArray(originalImage);
+
+        myWorkingImageArray = myOriginalConvertedImageArray.clone();
+
+        addBoundary(theCircle);
+
+    }*/
+
     public void addBoundary(CircleBoundary circle){
-        BufferedImage temp = myOriginal;
+
+        BufferedImage temp = myMapImage;
 
         myCircles.add(circle);
 
@@ -76,15 +94,15 @@ public class weatherMap {
         LinkedList<Point> tempList = circle.getMyPoints();
 
         //Draw a line column @ width
-        int height = myOriginal.getHeight();
-        int width = myOriginal.getWidth();
+        /*int height = myMapImage.getHeight();
+        int width = myMapImage.getWidth();
 
         for(int i = 0; i < height; i++){
             temp.setRGB(width/3,i,Color.RED.getRGB());
         }
         for(int i = 0; i < width; i++){
             temp.setRGB(i,height/5,Color.RED.getRGB());
-        }
+        }*/
 
         for(int i = 0; i < tempList.size(); i++){
                 Point p = tempList.get(i);
@@ -95,29 +113,26 @@ public class weatherMap {
                 try {
 
                     temp.setRGB(x, y, Color.RED.getRGB());
-                    myWorkingImageArray[x][y] = Color.RED.getRGB();
+                    myOriginalConvertedImageArray[x][y] = Color.RED.getRGB();
                 } catch (Exception e){
-                    System.err.println("Array size Width: " + myWorkingImageArray[0].length +" and Height: " + myWorkingImageArray.length);
+                    /*System.err.println("Array size Width: " + myOriginalConvertedImageArray[0].length +" and Height: "
+                                                                            + myOriginalConvertedImageArray.length);*/
+                    System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
+                            "encountered an Error \nERROR:: " + e.toString());
                     System.err.println();
                     System.err.println("Error: "+e.toString()+" at point: " + p.getMyX()+"," +p.getMyY());
-                    System.err.println("Error: "+e.toString()+" at point: " + x+"," +y);
+                    System.err.println("Error at point: " + x+"," +y);
                     System.err.println();
                     System.err.println("");
                     System.err.println();
                 }
 
-
         }
 
 
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(temp, "png", baos );
 
-            //Persist - in this case to a file
-            FileOutputStream fos = new FileOutputStream(new File("CurrentBounds - "+myName+".png"));
-            baos.writeTo(fos);
-            fos.close();
+            writeImageFile(temp,"CurrentBounds - " + myName);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -31,14 +31,14 @@ public class MAIN {
 
     private static Point myCenter;
 
-    private static CircleBoundary radiusOne;
+    private static CircleBoundary radiusOne,radiusTwo;
 
     private static int mapWidth,mapHeight;
 
     public static void main(String[] args){
 
-        mapWidth = 1582;
-        mapHeight = 1676;
+        mapWidth = 643;
+        mapHeight = 643;
 
         degreesWide = myMaxLong - myMinLong;//8.7
         degreesTall = myMaxLat - myMinLat;//6.4
@@ -60,8 +60,11 @@ public class MAIN {
             myCenter = gpsToXY(myLong,myLat);
 
             radiusOne = new CircleBoundary(myCenter.getMyY(),myCenter.getMyX(),100);
+            radiusTwo = new CircleBoundary(255,136,75);
 
-            myGrabber.getImageFromURL(imageSourceFull,radiusOne);
+            myGrabber.getImageFromURL(imageSourceFull);
+            myGrabber.addBoundary(radiusTwo);
+            myGrabber.addBoundary(radiusOne);
             //myGrabber.getImageFromURL(imageSourceClear,radiusOne);
 
             //Testing found that the alpha channel value for non alpha values
@@ -88,21 +91,21 @@ public class MAIN {
     * pixels currently @480 = .00875' lat per pixel
     * pixels currently @640 = .009375' long per pixel
     *
-    * lat is y
-    * lon is x*/
+    * lat is x
+    * lon is y*/
     private static Point gpsToXY(Double lon, Double lat){
         Point temp = new Point();
 
         Double latDiff = myMaxLat - lat;
-        Double lonDiff = myMaxLong - lon;
+        Double lonDiff = lon - myMinLong;
 
         System.out.println("Inside gpsToXY...");
         System.out.println("Input: Lat|" + lat + " Lon|" + lon);
         System.out.println("Start Point: Lat|" + myMaxLat + " Lon|" + myMinLong);
         System.out.println("Difference: Lat|" + latDiff + " Lon|" + lonDiff);
 
-        temp.setMyY((int) ((latDiff) / scaleLat));
-        temp.setMyX((int) ((lonDiff) / scaleLon));
+        temp.setMyX((int) ((latDiff) / scaleLat));
+        temp.setMyY((int) ((lonDiff) / scaleLon));
 
         System.out.println("XY Values: X|" + temp.getMyX() + " Y|" + temp.getMyY());
         System.out.println();
