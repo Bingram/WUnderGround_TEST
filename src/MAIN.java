@@ -12,11 +12,11 @@ import java.io.IOException;
 * */
 public class MAIN {
 
-    private static weatherMap myGrabber = new weatherMap("Washington");
+
 
     private static Double myLat = 47.6334;
 
-    private static Double myLong = -121.70609;
+    private static Double myLong = -122.70609;
 
     //new margins based on testing using Googlemaps
     /*private static Double marginLong = 3.0;
@@ -35,10 +35,14 @@ public class MAIN {
 
     private static int mapWidth,mapHeight;
 
+    private static weatherMap myWeatherMap;
+
     public static void main(String[] args){
 
-        mapWidth = 643;
-        mapHeight = 643;
+        mapWidth = 1280;
+        mapHeight = 1280;
+
+        myWeatherMap = new weatherMap("Washington",mapWidth,mapHeight);
 
         degreesWide = myMaxLong - myMinLong;//8.7
         degreesTall = myMaxLat - myMinLat;//6.4
@@ -52,20 +56,24 @@ public class MAIN {
         String imageSourceFull = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat=" + myMaxLat +
                 "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + mapWidth + "&height=" + mapHeight + "&newmaps=1";
 
+        System.out.println("Scale Lat: "+scaleLat+" Lon: " +scaleLon);
+        System.out.println();
         System.out.println("Clear Image URL: "+imageSourceClear);
         System.out.println("Full Image URL: "+imageSourceFull);
         try {
-            //attempt to grab image, file test.png is output
 
             myCenter = gpsToXY(myLong,myLat);
+            Point secondCenter = gpsToXY(-122.607422,47.938513);
 
             radiusOne = new CircleBoundary(myCenter.getMyY(),myCenter.getMyX(),100);
-            radiusTwo = new CircleBoundary(255,136,75);
 
-            myGrabber.getImageFromURL(imageSourceFull);
-            myGrabber.addBoundary(radiusTwo);
-            myGrabber.addBoundary(radiusOne);
-            //myGrabber.getImageFromURL(imageSourceClear,radiusOne);
+            radiusTwo =new CircleBoundary(secondCenter.getMyY(),secondCenter.getMyX(),100);
+
+            myWeatherMap.getImageFromURL(imageSourceFull, "full-image-WA");
+            //myWeatherMap.getImageFromURL(imageSourceClear, "clear-image-WA");
+
+            myWeatherMap.addBoundary(radiusOne);
+            myWeatherMap.addBoundary(radiusTwo);
 
             //Testing found that the alpha channel value for non alpha values
             //equals -16777216 which translates to a clear pixel or no weather
@@ -76,10 +84,19 @@ public class MAIN {
 
     }
 
-    private static boolean checkWeatherQuad(){
+    private boolean checkWeatherQuad(){
         boolean result = false;
 
-
+        /**
+         * This may need to be broken in a to helper class if I get a
+         * more complex checking algorithm.
+         *
+         * Currently the plan is to check starting at points in the West
+         * quadrants then moving out in both directions.
+         *
+         * Next idea is to check wind direction and use that to determine
+         * best starting location.
+         */
 
         return result;
     }

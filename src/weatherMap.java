@@ -4,10 +4,9 @@ import DataStructures.Point;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.awt.image.DataBufferByte;
+import java.awt.image.WritableRaster;
+import java.io.*;
 import java.net.URL;
 import java.util.LinkedList;
 
@@ -28,18 +27,28 @@ public class weatherMap {
     private aRGBConverter myConverter;
 
     private weatherMap(){
-
-    }
-
-    public weatherMap(String theName){
-        myOriginalConvertedImageArray = new int[0][0];
+        myImageWidth = 1;
+        myImageHeight = 1;
+        myOriginalConvertedImageArray = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
         myCircles = new LinkedList<CircleBoundary>();
-        myMapImage = null;
+        myMapImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
+        boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
+        myName = "BLANK";
+    }
+
+    public weatherMap(String theName, int theWidth, int theHeight){
+        myImageWidth = theWidth;
+        myImageHeight = theHeight;
+        myOriginalConvertedImageArray = new int[myImageWidth][myImageHeight];
+        myConverter = new aRGBConverter();
+        myCircles = new LinkedList<CircleBoundary>();
+        myMapImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
+        boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         myName = theName;
     }
 
-    public void getImageFromURL(String theUrl) throws IOException {
+    public void getImageFromURL(String theUrl, String theName) throws IOException {
 
         try {
 
@@ -47,7 +56,11 @@ public class weatherMap {
 
             myMapImage = ImageIO.read(imageURL);
 
-            writeImageFile(myMapImage,"original");
+            myOriginalConvertedImageArray = myConverter.get2DArray(myMapImage);
+
+            writeImageFile(myMapImage,theName);
+
+            boundaryImage = readImageFile(theName + ".png");
 
         } catch (Exception e){
             System.out.println("no image returned");
@@ -74,58 +87,58 @@ public class weatherMap {
 
     }
 
-    /*public void test(){
+    public BufferedImage readImageFile(String fileName) throws IOException{
 
-        myOriginalConvertedImageArray = myConverter.get2DArray(originalImage);
+        BufferedImage temp = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
 
-        myWorkingImageArray = myOriginalConvertedImageArray.clone();
+        try {
 
-        addBoundary(theCircle);
+            // open image
+            File imageFile = new File(fileName);
+            temp = ImageIO.read(imageFile);
 
-    }*/
+        } catch (Exception e){
+            System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
+                    "encountered an Error \nERROR:: " + e.toString());
+        }
+
+        return temp;
+    }
 
     public void addBoundary(CircleBoundary circle){
 
-        BufferedImage temp = myMapImage;
+        BufferedImage temp = boundaryImage;
 
         myCircles.add(circle);
 
         //modify temp image with boundary
         LinkedList<Point> tempList = circle.getMyPoints();
 
-        //Draw a line column @ width
-        /*int height = myMapImage.getHeight();
-        int width = myMapImage.getWidth();
-
-        for(int i = 0; i < height; i++){
-            temp.setRGB(width/3,i,Color.RED.getRGB());
-        }
-        for(int i = 0; i < width; i++){
-            temp.setRGB(i,height/5,Color.RED.getRGB());
-        }*/
 
         for(int i = 0; i < tempList.size(); i++){
-                Point p = tempList.get(i);
+            Point p = tempList.get(i);
 
-                int x = p.getMyX();
-                int y = p.getMyY();
+            int x = p.getMyX();
+            int y = p.getMyY();
 
-                try {
+            temp.setRGB(x, y, Color.RED.getRGB());
+            myOriginalConvertedImageArray[x][y] = Color.RED.getRGB();
 
-                    temp.setRGB(x, y, Color.RED.getRGB());
-                    myOriginalConvertedImageArray[x][y] = Color.RED.getRGB();
-                } catch (Exception e){
-                    /*System.err.println("Array size Width: " + myOriginalConvertedImageArray[0].length +" and Height: "
-                                                                            + myOriginalConvertedImageArray.length);*/
-                    System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
-                            "encountered an Error \nERROR:: " + e.toString());
-                    System.err.println();
-                    System.err.println("Error: "+e.toString()+" at point: " + p.getMyX()+"," +p.getMyY());
-                    System.err.println("Error at point: " + x+"," +y);
-                    System.err.println();
-                    System.err.println("");
-                    System.err.println();
-                }
+            try {
+
+
+            } catch (Exception e){
+                /*System.err.println("Array size Width: " + myOriginalConvertedImageArray[0].length +" and Height: "
+                                                                        + myOriginalConvertedImageArray.length);*/
+                System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
+                        "encountered an Error \nERROR:: " + e.toString());
+                System.err.println();
+                System.err.println("Error: "+e.toString()+" at point: " + p.getMyX()+"," +p.getMyY());
+                System.err.println("Error at point: " + x+"," +y);
+                System.err.println();
+                System.err.println("");
+                System.err.println();
+            }
 
         }
 
