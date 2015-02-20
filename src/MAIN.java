@@ -31,6 +31,7 @@ public class MAIN {
 
     private static Point myCenter;
 
+    //temporary limitation of 100 px radius
     private static CircleBoundary radiusOne,radiusTwo;
 
     private static int mapWidth,mapHeight;
@@ -66,7 +67,7 @@ public class MAIN {
             Point secondCenter = gpsToXY(-122.607422,47.938513);
 
             radiusOne = new CircleBoundary(myCenter.getMyY(),myCenter.getMyX(),100);
-
+            //temporary limitation of 100 px radius
             radiusTwo =new CircleBoundary(secondCenter.getMyY(),secondCenter.getMyX(),100);
 
             myWeatherMap.getImageFromURL(imageSourceFull, "full-image-WA");

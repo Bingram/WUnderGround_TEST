@@ -15,7 +15,7 @@ public class CircleBoundary {
 
     private final int myX, myY;
 
-    private LinkedList<Circle> myBoundaries;
+    private LinkedList<Boundary> myBoundaries;
 
     private LinkedList<Point> myPoints;
 
@@ -37,10 +37,11 @@ public class CircleBoundary {
         myX = x;
         myY = y;
 
-        myBoundaries = new LinkedList<Circle>();
+        myBoundaries = new LinkedList<Boundary>();
         myPoints = new LinkedList<Point>();
 
         addCircle(radius);//main perimeter
+
         addCircle(5);//center marking
 
     }
@@ -66,8 +67,8 @@ public class CircleBoundary {
      * @param radius int for radius of circle
      * @return boolean value if circle can be made
      */
-    private boolean makeCircle(final int centerX, final int centerY, final int radius) {
-        boolean result = true;
+    private int makeCircle(final int centerX, final int centerY, final int radius) {
+        int count = 0;
 
         int d = (5 - radius * 4)/4;
         int x = 0;
@@ -77,16 +78,16 @@ public class CircleBoundary {
 
         setupQuads(newQuads);
 
-        Circle newCircle = new Circle(centerX,centerY, radius);
+        Boundary newBoundary = new Boundary(centerX,centerY, radius);
 
         //invalid values of circle
         if(centerX < 0 || centerY < 0 || radius <=0){
-            result = false;
+           boolean result = false;
 
             x = y++;//ensures loop is never entered
         }
 
-        do {
+        while (x <= y){
 
             //create points
             Point p0 = new Point(centerX + x, centerY + y);
@@ -97,6 +98,8 @@ public class CircleBoundary {
             Point p5 = new Point(centerX + y, centerY - x);
             Point p6 = new Point(centerX - y, centerY + x);
             Point p7 = new Point(centerX - y, centerY - x);
+
+            count+=8;
 
             //add a point in each quadrant in new Circle
             newQuads[0].add(p0);
@@ -125,14 +128,37 @@ public class CircleBoundary {
                 y--;
             }
             x++;
-        } while (x <= y);
+        }
 
-        newCircle.setQuads(newQuads);
+        newBoundary.setQuads(newQuads);
 
-        myBoundaries.add(newCircle);
+        myBoundaries.add(newBoundary);
 
-        return result;
+        return count;
     }
+
+    public void testQuad(LinkedList<Point> thePoints){
+
+    }
+
+    public boolean checkCircle(Point theCenter){
+        Boundary temp = getBoundary(theCenter);
+
+        return false;
+    }
+
+    public boolean checkCircle(Boundary theBound){
+        Boundary tempBound = theBound;
+
+
+
+        return false;
+    }
+
+    private Boundary getBoundary(Point center) {
+        return null;
+    }
+
 
     /**
      * Adds a circle with given radius to quad array.
@@ -142,8 +168,13 @@ public class CircleBoundary {
      */
     public void addCircle(int theRadius){
 
-        if (theRadius > 0){
-            makeCircle(myX,myY,theRadius);
+        //temporary limitation of 100 px radius
+        if (theRadius > 0 && theRadius <= 100){
+
+            //make a circle and print number of points in radius
+            System.out.println(this.getClass());
+            System.out.println("Circle created, number of points: " + makeCircle(myX,myY,theRadius) );
+
             System.out.println("Circle of size: "+theRadius+" added to Map @ "+myX+","+myY);
         }
     }
@@ -153,32 +184,4 @@ public class CircleBoundary {
         return myPoints;
     }
 
-    private class Circle{
-
-        private final Point myCenter;
-        private final int myRadius;
-
-        private LinkedList<Point>[] myQuads =  new LinkedList[8];
-
-        protected Circle(final int theX,final int theY,final int theRadius){
-            this.myCenter = new Point(theX,theY);
-            this.myRadius = theRadius;
-        }
-
-        public LinkedList<Point>[] getQuads() {
-            return myQuads;
-        }
-
-        public void setQuads(LinkedList<Point>[] quads) {
-            this.myQuads = quads;
-        }
-
-        public Point getMyCenter() {
-            return myCenter;
-        }
-
-        public int getMyRadius() {
-            return myRadius;
-        }
-    }
 }

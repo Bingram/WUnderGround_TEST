@@ -17,8 +17,9 @@ import java.util.LinkedList;
  */
 public class weatherMap {
 
-    private int[][] myOriginalConvertedImageArray;
-    private LinkedList<CircleBoundary> myCircles;
+    private int[][] myOriginalConvertedImageArray;//Working array of pixels for weather
+    private int[][] myWorkingImageArray;//Working array of pixels for weather
+    private LinkedList<CircleBoundary> myCircles;//TODO weatherMap only needs ONE CircleBoundary
     private int myImageWidth,myImageHeight;
     private BufferedImage myMapImage,boundaryImage;
 
@@ -71,6 +72,50 @@ public class weatherMap {
 
     }
 
+    //temporary limitation of 100 px radius
+    public void addBoundary(CircleBoundary circle){
+
+        BufferedImage temp = boundaryImage;
+
+        myCircles.add(circle);
+
+        //modify temp image with boundary
+        LinkedList<Point> tempList = circle.getMyPoints();
+
+
+        for(int i = 0; i < tempList.size(); i++){
+            Point p = tempList.get(i);
+
+            int x = p.getMyX();
+            int y = p.getMyY();
+
+
+            myOriginalConvertedImageArray[x][y] = Color.RED.getRGB();
+
+            try {
+
+                temp.setRGB(x, y, Color.RED.getRGB());
+
+            } catch (Exception e){
+                System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
+                        "encountered an Error \nERROR:: " + e.toString());
+
+            }
+
+        }
+
+
+        try {
+
+            writeImageFile(temp,"CurrentBounds - " + myName);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     public void writeImageFile(BufferedImage theImage,String fileName) throws IOException{
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -82,7 +127,7 @@ public class weatherMap {
             fos.close();
         } catch (Exception e){
             System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
-                                                "encountered an Error \nERROR:: " + e.toString());
+                    "encountered an Error \nERROR:: " + e.toString());
         }
 
     }
@@ -103,53 +148,6 @@ public class weatherMap {
         }
 
         return temp;
-    }
-
-    public void addBoundary(CircleBoundary circle){
-
-        BufferedImage temp = boundaryImage;
-
-        myCircles.add(circle);
-
-        //modify temp image with boundary
-        LinkedList<Point> tempList = circle.getMyPoints();
-
-
-        for(int i = 0; i < tempList.size(); i++){
-            Point p = tempList.get(i);
-
-            int x = p.getMyX();
-            int y = p.getMyY();
-
-            temp.setRGB(x, y, Color.RED.getRGB());
-            myOriginalConvertedImageArray[x][y] = Color.RED.getRGB();
-
-            try {
-
-
-            } catch (Exception e){
-                /*System.err.println("Array size Width: " + myOriginalConvertedImageArray[0].length +" and Height: "
-                                                                        + myOriginalConvertedImageArray.length);*/
-                System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
-                        "encountered an Error \nERROR:: " + e.toString());
-                System.err.println();
-                System.err.println("Error: "+e.toString()+" at point: " + p.getMyX()+"," +p.getMyY());
-                System.err.println("Error at point: " + x+"," +y);
-                System.err.println();
-                System.err.println("");
-                System.err.println();
-            }
-
-        }
-
-
-        try {
-
-            writeImageFile(temp,"CurrentBounds - " + myName);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void getImageSize(BufferedImage image){
