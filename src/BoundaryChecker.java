@@ -1,5 +1,4 @@
 import DataStructures.Boundary;
-import DataStructures.CircleBoundary;
 
 /**
  * Created by Brian on 2/20/2015.

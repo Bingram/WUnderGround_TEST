@@ -1,11 +1,11 @@
-import DataStructures.CircleBoundary;
+import DataStructures.Boundary;
+import DataStructures.BoundaryBundle;
 import DataStructures.Point;
+import DataStructures.PointList;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.*;
 import java.net.URL;
 import java.util.LinkedList;
@@ -19,7 +19,7 @@ public class weatherMap {
 
     private int[][] myOriginalConvertedImageArray;//Working array of pixels for weather
     private int[][] myWorkingImageArray;//Working array of pixels for weather
-    private LinkedList<CircleBoundary> myCircles;//TODO weatherMap only needs ONE CircleBoundary
+    private BoundaryBundle myBoundaries;
     private int myImageWidth,myImageHeight;
     private BufferedImage myMapImage,boundaryImage;
 
@@ -32,7 +32,7 @@ public class weatherMap {
         myImageHeight = 1;
         myOriginalConvertedImageArray = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
-        myCircles = new LinkedList<CircleBoundary>();
+        myBoundaries = new BoundaryBundle();
         myMapImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         myName = "BLANK";
@@ -43,7 +43,7 @@ public class weatherMap {
         myImageHeight = theHeight;
         myOriginalConvertedImageArray = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
-        myCircles = new LinkedList<CircleBoundary>();
+        myBoundaries = new BoundaryBundle();
         myMapImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         myName = theName;
@@ -73,28 +73,25 @@ public class weatherMap {
     }
 
     //temporary limitation of 100 px radius
-    public void addBoundary(CircleBoundary circle){
+    public void addBoundary(Boundary circle){
 
-        BufferedImage temp = boundaryImage;
+        BufferedImage tempImage = boundaryImage;
 
-        myCircles.add(circle);
+        myBoundaries.addBoundary(circle);
 
-        //modify temp image with boundary
-        LinkedList<Point> tempList = circle.getMyPoints();
-
+        PointList tempList = circle.getMyPoints();
 
         for(int i = 0; i < tempList.size(); i++){
-            Point p = tempList.get(i);
+            Point p = (Point)tempList.getObject(i);
 
             int x = p.getMyX();
             int y = p.getMyY();
-
 
             myOriginalConvertedImageArray[x][y] = Color.RED.getRGB();
 
             try {
 
-                temp.setRGB(x, y, Color.RED.getRGB());
+                tempImage.setRGB(x, y, Color.RED.getRGB());
 
             } catch (Exception e){
                 System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
@@ -107,7 +104,7 @@ public class weatherMap {
 
         try {
 
-            writeImageFile(temp,"CurrentBounds - " + myName);
+            writeImageFile(tempImage,"CurrentBounds - " + myName);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,4 +1,5 @@
-import DataStructures.CircleBoundary;
+import DataStructures.Boundary;
+import DataStructures.BoundaryBundle;
 import DataStructures.Point;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class MAIN {
     private static Point myCenter;
 
     //temporary limitation of 100 px radius
-    private static CircleBoundary radiusOne,radiusTwo;
+    private static Boundary radiusOne,radiusTwo;
 
     private static int mapWidth,mapHeight;
 
@@ -66,9 +67,9 @@ public class MAIN {
             myCenter = gpsToXY(myLong,myLat);
             Point secondCenter = gpsToXY(-122.607422,47.938513);
 
-            radiusOne = new CircleBoundary(myCenter.getMyY(),myCenter.getMyX(),100);
+            radiusOne = new Boundary(myCenter.getMyY(),myCenter.getMyX(),100);
             //temporary limitation of 100 px radius
-            radiusTwo =new CircleBoundary(secondCenter.getMyY(),secondCenter.getMyX(),100);
+            radiusTwo =new Boundary(secondCenter.getMyY(),secondCenter.getMyX(),100);
 
             myWeatherMap.getImageFromURL(imageSourceFull, "full-image-WA");
             //myWeatherMap.getImageFromURL(imageSourceClear, "clear-image-WA");
