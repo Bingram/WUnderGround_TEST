@@ -48,6 +48,11 @@ public class Point{
         this.myColor = myColor;
     }
 
+    public String toString(){
+
+        return "Point: " + myX + "," + myY;
+    }
+
     @Override
     public int hashCode() {
         return super.hashCode() * myX * myY * myColor;
