@@ -69,15 +69,23 @@ public class PointList {
     }
 
     public boolean remove(int index){
-        Node current = get(index-1);//grab preceding Node
+        Node current = myhead;
+        Node previous = null;
 
         boolean result = false;
 
-        if (current != null) {//if get was successful
+        for (int i = 0; i < index; i++) {
+            previous = current;
+            current = current.getMyNext();
+        }
 
-            //point node preceding node to delete, to deleted nodes next node...node..
+        if (current != null){
+            previous.myNext = current.myNext;
+            result = true;
+        }
 
-            Node deleted = current.getMyNext();
+        /*if (current != null) {//if get was successful
+
 
             current.setMyNext(deleted.getMyNext());
 
@@ -87,7 +95,7 @@ public class PointList {
 
             result = true;
 
-        }
+        }*/
 
         return result;
 
