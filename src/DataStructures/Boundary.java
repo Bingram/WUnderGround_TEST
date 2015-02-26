@@ -89,7 +89,7 @@ public class Boundary {
 
     private void addPoints(){
         for(PointList list: myQuads){
-            for(int i = 0; i < list.size(); i++){
+            for(int i = 1; i < list.size(); i++){
                 myPoints.addFIFO(list.getObject(i));
             }
         }

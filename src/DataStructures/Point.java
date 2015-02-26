@@ -50,7 +50,7 @@ public class Point{
 
     public String toString(){
 
-        return "Point: " + myX + "," + myY;
+        return "(" + myX + "," + myY + ")";
     }
 
     @Override

@@ -70,32 +70,17 @@ public class PointList {
 
     public boolean remove(int index){
         Node current = myhead;
-        Node previous = null;
+
 
         boolean result = false;
 
-        for (int i = 0; i < index; i++) {
-            previous = current;
+        for (int i = 1; i <index; i++) {
+            if (current.getMyNext()==null){return result;}
             current = current.getMyNext();
         }
 
-        if (current != null){
-            previous.myNext = current.myNext;
-            result = true;
-        }
-
-        /*if (current != null) {//if get was successful
-
-
-            current.setMyNext(deleted.getMyNext());
-
-            deleted.setMyNext(null);//maybe unnecessary...
-
-            mySize--;
-
-            result = true;
-
-        }*/
+        current.setMyNext(current.getMyNext().getMyNext());
+        mySize--;
 
         return result;
 
@@ -131,12 +116,6 @@ public class PointList {
 
         }
 
-        public Node(Object theItem, Node theNextNode){
-            myItem = theItem;
-            myNext = theNextNode;
-
-        }
-
         public Node getMyNext(){
             return myNext;
         }
@@ -151,6 +130,10 @@ public class PointList {
 
         public void setMyNext(Node theNext){
             myNext = theNext;
+        }
+
+        public String toString(){
+            return myItem.toString();
         }
     }
 }
