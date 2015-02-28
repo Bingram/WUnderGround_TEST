@@ -1,9 +1,11 @@
 package DataStructures;
 
+import java.util.Iterator;
+
 /**
  * Created by b on 2/23/15.
  */
-public class PointList {
+public class PointList implements Iterable<Point>{
 
     private Node myhead;
 
@@ -86,6 +88,10 @@ public class PointList {
 
     }
 
+    public Iterator<Point> iterator() {
+        return new PointIterator(this);
+    }
+
     public int size(){
         return mySize;
     }
@@ -103,6 +109,7 @@ public class PointList {
 
         return temp += " ]";
     }
+
 
     private class Node{
 

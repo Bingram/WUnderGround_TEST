@@ -1,6 +1,5 @@
 package DataStructures;
 
-import java.util.LinkedList;
 
 /**
  * Created by Brian on 2/20/2015.
@@ -85,6 +84,8 @@ public class Boundary {
             x++;
         }
 
+        addPoints();
+
     }
 
     private void addPoints(){
@@ -93,6 +94,20 @@ public class Boundary {
                 myPoints.addFIFO(list.getObject(i));
             }
         }
+    }
+
+    public String toString(){
+        String temp = "";
+
+        /*for (PointList pl: myQuads){
+            temp += pl.toString();
+        }*/
+
+        for (Point p: myPoints){
+            temp += p.toString() + "\n";
+        }
+
+        return temp;
     }
 
     public PointList[] getQuads() {
