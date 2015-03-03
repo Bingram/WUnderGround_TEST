@@ -13,68 +13,21 @@ import java.util.LinkedList;
  */
 public class BoundaryBundle {
 
+    private static final int LEVELS = 4;
+
+    private int mySize = 0;
+
     //private final int myX, myY;
 
-    private LinkedList<Boundary> myBoundaries;
+    //private LinkedList<Boundary> myBoundaries;
+
+    private Boundary[] myBounds;
 
     public BoundaryBundle(){
 
-        myBoundaries = new LinkedList<Boundary>();
+        //myBoundaries = new LinkedList<Boundary>();
+        myBounds = new Boundary[LEVELS];
     }
-
-
-    /**
-     * Creates a circle using MidPoint Circle algorithm
-     * Accepts XY values of center as int, along with circle
-     * radius. Adds points one at a time to each quadrant,
-     * calculated from bottom center in a counter-clockwise
-     * direction.
-     *
-     * @param centerX int for center x-value
-     * @param centerY int for center y-value
-     * @param radius int for radius of circle
-     * @return boolean value if circle can be made
-     */
-    private boolean makeCircle(final int centerX, final int centerY, final int radius) {
-        boolean result = true;
-
-        Boundary newBoundary = new Boundary();
-
-
-        //invalid values of circle
-        if(centerX < 0 || centerY < 0 || radius <=0){
-            result = false;
-        } else {
-            newBoundary = new Boundary(centerX, centerY, radius);
-        }
-
-        myBoundaries.add(newBoundary);
-
-        return result;
-    }
-
-    public void testQuad(LinkedList<Point> thePoints){
-
-    }
-
-    public boolean checkCircle(Point theCenter){
-        Boundary temp = getBoundary(theCenter);
-
-        return false;
-    }
-
-    public boolean checkCircle(Boundary theBound){
-        Boundary tempBound = theBound;
-
-
-
-        return false;
-    }
-
-    private Boundary getBoundary(Point center) {
-        return null;
-    }
-
 
     /**
      * Adds a circle with given radius to quad array.
@@ -108,6 +61,65 @@ public class BoundaryBundle {
 
             addBoundary(x,y,radius);
         }
+    }
+
+    /**
+     * Creates a circle using MidPoint Circle algorithm
+     * Accepts XY values of center as int, along with circle
+     * radius. Adds points one at a time to each quadrant,
+     * calculated from bottom center in a counter-clockwise
+     * direction.
+     *
+     * @param centerX int for center x-value
+     * @param centerY int for center y-value
+     * @param radius int for radius of circle
+     * @return boolean value if circle can be made
+     */
+    private boolean makeCircle(final int centerX, final int centerY, final int radius) {
+        boolean result = true;
+
+        Boundary newBoundary = new Boundary();
+
+
+        //invalid values of circle
+        if(centerX < 0 || centerY < 0 || radius <=0){
+            result = false;
+        } else {
+            newBoundary = new Boundary(centerX, centerY, radius);
+        }
+
+        //myBoundaries.add(newBoundary);
+
+        myBounds[mySize++] = newBoundary;
+
+        return result;
+    }
+
+    public Boundary getBoundary(int level) {
+
+        return myBounds[level];
+    }
+
+    public void testQuad(LinkedList<Point> thePoints){
+
+    }
+
+    public boolean checkCircle(int level){
+        Boundary temp = getBoundary(level);
+
+        return false;
+    }
+
+    public boolean checkCircle(Boundary theBound){
+        Boundary tempBound = theBound;
+
+
+
+        return false;
+    }
+
+    public int getMySize() {
+        return mySize;
     }
 
 
