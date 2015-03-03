@@ -5,24 +5,17 @@ package DataStructures;
  */
 public class Point{
 
-    private int myX, myY, myColor;
+    private int myX, myY;
 
     public Point(){
-        myX=myY=myColor=-1;
+        myX=myY=-1;
     }
 
     public Point(int x, int y){
-        myColor = 0;
+
         myX = x;
         myY = y;
     }
-
-    public Point(int x, int y, int color){
-        myColor = color;
-        myX = x;
-        myY = y;
-    }
-
 
     public int getMyX() {
         return myX;
@@ -40,14 +33,6 @@ public class Point{
         this.myY = y;
     }
 
-    public int getMyColor() {
-        return myColor;
-    }
-
-    public void setMyColor(int myColor) {
-        this.myColor = myColor;
-    }
-
     public String toString(){
 
         return "(" + myX + "," + myY + ")";
@@ -55,7 +40,7 @@ public class Point{
 
     @Override
     public int hashCode() {
-        return super.hashCode() * myX * myY * myColor;
+        return super.hashCode() * myX * myY;
     }
 
     @Override
@@ -69,7 +54,7 @@ public class Point{
             p = (Point) o;//object is of correct class, cast it
         }
 
-        if(p.getMyX()==myX && p.getMyY()==myY && p.getMyColor()==myColor){
+        if(p.getMyX()==myX && p.getMyY()==myY){
             result = true;
         }
         return result;

@@ -45,24 +45,17 @@ public class BoundaryTest extends TestCase {
         PointList one = testQuads[0];
         PointList two = mainQuads[0];
 
-
-        System.out.println();
-        System.out.println("Both Quads: ");
-        System.out.println("Original Quad " +two.toString() );
-        System.out.println("New Quad " +one.toString());
-
         one.remove(0);
 
-        System.out.println();
-        System.out.println("Both Quads: ");
-        System.out.println("Original Quad " +two.toString() );
-        System.out.println("New Quad *MODIFIED* " +one.toString());
-
-        assertSame(one.getObject(0), two.getObject(1));
+        assertEquals(one.getObject(0), two.getObject(1));
     }
 
     @Test
     public void testGetMyPoints() throws Exception {
+
+        Boundary test = new Boundary(15,12,2);
+
+        assertEquals(myBoundary.getMyPoints(),test.getMyPoints());
 
     }
 
