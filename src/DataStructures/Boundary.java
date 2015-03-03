@@ -99,10 +99,6 @@ public class Boundary {
     public String toString(){
         String temp = "";
 
-        /*for (PointList pl: myQuads){
-            temp += pl.toString();
-        }*/
-
         for (Point p: myPoints){
             temp += p.toString() + "\n";
         }
