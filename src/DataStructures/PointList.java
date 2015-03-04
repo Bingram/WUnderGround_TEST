@@ -4,22 +4,46 @@ import java.util.Iterator;
 
 /**
  * Created by b on 2/23/15.
+ *
+ * Custom linked list for use with Boundary object
+ * Each quad on the boundary is a PointList
+ * The idea is to be able to easily traverse in
+ * either direction
  */
 public class PointList implements Iterable<Point>{
 
-    private Node myhead;
+    protected Node myhead;
 
     private int mySize;
+
+    private String FLAG;
 
     public PointList(){
         myhead = new Node(null);
         mySize = 0;
 
+        FLAG = "BLANK";
+
     }
+
+    /**
+     * Add objects in a FIFO order, or
+     * in the case of a quad in a circle,
+     * a clockwise direction
+     * right to left.
+     *
+     * This allows easier checking based on
+     * cardinal directions relative to wind.
+     *
+     * @param theObject Object to be added to list
+     */
 
     public void addFIFO(Object theObject){
 
         if(theObject != null){
+
+            FLAG = "FIFO";
+
             Node temp = new Node(theObject);
             Node current = myhead;
 
@@ -32,9 +56,25 @@ public class PointList implements Iterable<Point>{
         }
     }
 
+    /**
+     * Add objects in a LIFO order, or
+     * in the case of a quad in a circle,
+     * a counter-clockwise direction
+     * left to right.
+     *
+     * This allows easier checking based on
+     * cardinal directions relative to wind.
+     *
+     * @param theObject Object to be added to list
+     */
     public void addLIFO(Object theObject){
 
         if(theObject != null){
+
+            if (FLAG.equals("BLANK")){
+                FLAG = "LIFO";
+            }
+
             Node temp = new Node(theObject);
             Node current = myhead;
 
@@ -46,11 +86,45 @@ public class PointList implements Iterable<Point>{
         }
     }
 
-    public Object getObject(int index){
-        return get(index).getMyItem();
+    /**
+     * Takes the current order of list and reverses it
+     */
+    public void reverseList(){
+        PointList temp = new PointList();
+
+        if (FLAG.equals("FIFO")) {
+            for (int i = 0; i < mySize; i++) {
+                temp.addFIFO(this.getObject(i));
+            }
+            temp.myhead = this.myhead;
+        }
+
+        if (FLAG.equals("LIFO")) {
+            for (int i = 0; i < mySize; i++) {
+                temp.addLIFO(this.getObject(i));
+            }
+            temp.myhead = this.myhead;
+        }
     }
 
-    private Node get(int index){
+    /**
+     * Returns the object held in the node at the given index
+     *
+     * @param index position in list
+     * @return Object contained in node
+     */
+    public Object getObject(int index){
+        return getNode(index).getMyItem();
+    }
+
+    /**
+     * Iterate and return node at given index
+     *
+     * @param index position in list
+     * @return Node at index
+     */
+    public Node getNode(int index){
+
         if (index<0 || index>mySize){
             System.err.println("Retrieved Node index out of range: " + index);
             return null;
@@ -70,9 +144,15 @@ public class PointList implements Iterable<Point>{
         return current;
     }
 
+    /**
+     * Removes Node at given index
+     *
+     * @param index position in list
+     * @return Boolean if removal successful
+     */
     public boolean remove(int index){
-        Node current = myhead;
 
+        Node current = myhead;
 
         boolean result = false;
 
@@ -88,10 +168,20 @@ public class PointList implements Iterable<Point>{
 
     }
 
+    /**
+     * Get Iterator for Point
+     *
+     * @return Point Iterator
+     */
     public Iterator<Point> iterator() {
         return new PointIterator(this);
     }
 
+    /**
+     * return int of current list size
+     *
+     * @return int size of list
+     */
     public int size(){
         return mySize;
     }
@@ -115,57 +205,30 @@ public class PointList implements Iterable<Point>{
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode() {//Basic hash implementation
         int result = myhead != null ? myhead.hashCode() : 0;
         result = 31 * result + mySize;
         return result;
     }
 
+    /**
+     * Reutrns string representation of list
+     * @return String of point values
+     */
     public String toString(){
         String temp = "[ ";
 
         for(int i = 0; i<mySize; i++){
-            temp += "{" + get(i).toString() + "}";
+            temp += "{" + getNode(i).toString() + "}";
 
-            if(i<mySize-1){
+            if(i<mySize-1){//fencepost
                 temp += "|";
             }
+
         }
 
         return temp += " ]";
     }
 
 
-    private class Node{
-
-        Object myItem;
-
-        Node myNext;
-
-        public Node(Object theItem){
-            myItem = theItem;
-            myNext = null;
-
-        }
-
-        public Node getMyNext(){
-            return myNext;
-        }
-
-        public Object getMyItem(){
-            return myItem;
-        }
-
-        public void setMyItem(Object theItem){
-            myItem = theItem;
-        }
-
-        public void setMyNext(Node theNext){
-            myNext = theNext;
-        }
-
-        public String toString(){
-            return myItem.toString();
-        }
-    }
 }

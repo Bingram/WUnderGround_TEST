@@ -1,14 +1,14 @@
-import DataStructures.Boundary;
-import DataStructures.BoundaryBundle;
+import DataStructures.*;
 import DataStructures.Point;
-import DataStructures.PointList;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
-import java.util.LinkedList;
 
 /**
  * Created by Brian on 2/12/2015.
@@ -51,6 +51,7 @@ public class weatherMap {
 
     public void getImageFromURL(String theUrl, String theName) throws IOException {
 
+        //TODO add filtering for wunderground URL only? OR leave vanilla?
         try {
 
             URL imageURL = new URL(theUrl);
@@ -73,16 +74,48 @@ public class weatherMap {
     }
 
     //temporary limitation of 100 px radius
-    public void addBoundary(Boundary circle){
+    public void addBoundary(Boundary theBound){
 
         BufferedImage tempImage = boundaryImage;
 
-        myBoundaries.addBoundary(circle);
+        myBoundaries.addBoundary(theBound);
 
-        PointList tempList = circle.getMyPoints();
+        PointList thePoints = theBound.getMyPoints();
 
-        for(int i = 0; i < tempList.size(); i++){
-            Point p = (Point)tempList.getObject(i);
+        Node current = thePoints.getNode(0);
+
+        while(current.getMyNext() != null){
+            Point p = (Point)current.getMyItem();
+
+            int x = p.getMyX();
+            int y = p.getMyY();
+
+            myOriginalConvertedImageArray[x][y] = Color.RED.getRGB();
+
+            try {
+
+                tempImage.setRGB(x, y, Color.RED.getRGB());
+
+            } catch (Exception e){
+                System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
+                        "encountered an Error \nERROR:: " + e.toString());
+
+            }
+
+            current = current.getMyNext();
+
+        }
+
+        try {
+
+            writeImageFile(tempImage,"CurrentBounds - " + myName);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*for(int i = 0; i < thePoints.size(); i++){
+            Point p = (Point)thePoints.getObject(i);
 
             int x = p.getMyX();
             int y = p.getMyY();
@@ -101,14 +134,13 @@ public class weatherMap {
 
         }
 
-
         try {
 
             writeImageFile(tempImage,"CurrentBounds - " + myName);
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 
