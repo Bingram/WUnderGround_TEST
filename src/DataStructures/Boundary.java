@@ -11,16 +11,27 @@ public class Boundary {
 
     private final String myName;
 
-    private PointList[] myQuads = new PointList[8];
+    private PointList[] myQuads = new PointList[8];//quadrants of the boundary
 
-    private PointList myPoints = new PointList();
+    private PointList myPoints = new PointList();//all the points contained in a circle
 
+    /**
+     * Blank Boundary with default values
+     */
     public Boundary(){
         this.myCenter = new Point(0,0);
         this.myRadius = 1;
         myName = "BLANK";
     }
 
+    /**
+     * Boundary object with center at X,Y and Radius
+     * Default order of points is LIFO/counter-clockwise
+     *
+     * @param theX int x-center of boundary
+     * @param theY int y-center of boundary
+     * @param theRadius int radius of boundary
+     */
     public Boundary(final int theX, final int theY, final int theRadius){
         this.myCenter = new Point(theX,theY);
         this.myRadius = theRadius;
@@ -29,6 +40,15 @@ public class Boundary {
         setQuads(theX,theY,theRadius);
     }
 
+    /**
+     * Boundary object with center at X,Y and Radius and name
+     * Default order of points is LIFO/counter-clockwise
+     *
+     * @param theX int x-center of boundary
+     * @param theY int y-center of boundary
+     * @param theRadius int radius of boundary
+     * @param theName String name of boundary
+     */
     public Boundary(final int theX, final int theY, final int theRadius, final String theName){
         this.myCenter = new Point(theX,theY);
         this.myRadius = theRadius;
@@ -37,6 +57,9 @@ public class Boundary {
         setQuads(theX,theY,theRadius);
     }
 
+    /**
+     * Prime the quads
+     */
     private void quadSetup(){
         for (int i = 0; i < 8; i++) {
             myQuads[i] = new PointList();
@@ -85,6 +108,10 @@ public class Boundary {
         }
 
         addPoints();
+
+    }
+
+    private void addLine(Point p){
 
     }
 
