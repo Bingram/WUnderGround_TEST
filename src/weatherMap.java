@@ -34,8 +34,8 @@ public class weatherMap {
         myBoundaries = new BoundaryBundle();
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = "BLANK";
-        bgName = mapName + " - BG";
-        clearName = mapName + " - CLEAR";
+        bgName = mapName + "-BG";
+        clearName = mapName + "-CLEAR";
     }
 
     public weatherMap(String theName, int theWidth, int theHeight){
@@ -46,8 +46,8 @@ public class weatherMap {
         myBoundaries = new BoundaryBundle();
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = theName;
-        bgName = mapName + " - BG";
-        clearName = mapName + " - CLEAR";
+        bgName = mapName + "-BG";
+        clearName = mapName + "-CLEAR";
     }
 
     public void updateWeatherArray(String theUrl) throws IOException {
@@ -65,7 +65,7 @@ public class weatherMap {
 
         boundaryImage = getImageFromURL(theUrl);
 
-        writeImageFile(boundaryImage,bgName);
+        writeImageFile(boundaryImage,bgName);//update current BG
 
         updateBoundaryImage();
 
@@ -103,7 +103,8 @@ public class weatherMap {
 
         try {
 
-            writeImageFile(boundaryImage,"CurrentBounds - " + mapName);
+            writeImageFile(boundaryImage,"CurrentBounds-" + mapName);
+
 
         } catch (IOException e) {
             e.printStackTrace();
