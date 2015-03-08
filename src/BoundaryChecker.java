@@ -7,18 +7,17 @@ import DataStructures.PointList;
  */
 public class BoundaryChecker {
 
-    private final int[][] myWeatherArray;
-    private final Boundary myBound;
     private final int CLEAR = -16777216;
+
+    private int[][] myWeatherArray;
 
     private BoundaryChecker(){
         myWeatherArray = new int[0][0];
-        myBound = new Boundary(0,0,1);
     }
 
-    public BoundaryChecker(int[][] theArray, Boundary theBound){
+    public BoundaryChecker(int[][] theArray){
         myWeatherArray = theArray;
-        myBound = theBound;
+
     }
 
     public double checkPercent(PointList theList){
@@ -49,10 +48,10 @@ public class BoundaryChecker {
      * Does not check levels, only defaults to outer bound 0
      * @return boolean of percentage > 30%
      */
-    public boolean quickCheckOuter(){
+    public boolean quickCheckOuter(Boundary theBound){
         boolean result = false;
 
-        double test = checkPercent(myBound.getQuads()[5]);
+        double test = checkPercent(theBound.getQuads()[5]);
 
         if (test > 0.3){
             result = true;
@@ -61,10 +60,10 @@ public class BoundaryChecker {
         return result;
     }
 
-    public boolean quickCheckQuadrant(int quad){
+    public boolean CheckBoundaryQuad(Boundary theBound, int quad){
         boolean result = false;
 
-        double test = checkPercent(myBound.getQuads()[quad]);
+        double test = checkPercent(theBound.getQuads()[quad]);
 
         if (test > 0.3){
             result = true;
@@ -73,25 +72,25 @@ public class BoundaryChecker {
         return result;
     }
 
-    public boolean fullCheckOuter(){
+    public boolean fullCheckOuter(Boundary theBound){
         boolean result = false;
 
 
-        if (quickCheckOuter()){
+        if (quickCheckOuter(theBound)){
 
             int count = 0;
 
-            int size = myBound.getQuads().length;
+            int size = theBound.getQuads().length;
 
             for (int i = 0; i < size; i++) {
 
-                if (checkPercent(myBound.getQuads()[i]) >= 0.3){
+                if (checkPercent(theBound.getQuads()[i]) >= 0.3){
                     count++;
                 }
 
                 if (count > (size/2)){//greater than 50% coverage
                     result = true;
-                    return result;
+                    i=size;//stop loop here
                 }
 
             }
@@ -100,6 +99,10 @@ public class BoundaryChecker {
 
 
         return result;
+    }
+
+    public void updateWeather(int[][] newWeather){
+        myWeatherArray = newWeather;
     }
 
 
