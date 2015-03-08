@@ -17,52 +17,71 @@ import java.net.URL;
  */
 public class weatherMap {
 
-    private int[][] myOriginalConvertedImageArray;//Working array of pixels for weather
-    private int[][] myWorkingImageArray;//Working array of pixels for weather
+    private int[][] currentWeather;
     private BoundaryBundle myBoundaries;
     private int myImageWidth,myImageHeight;
-    private BufferedImage myMapImage,boundaryImage;
+    private BufferedImage boundaryImage;
 
-    private String myName;
+    private String mapName,bgName,clearName;
 
     private aRGBConverter myConverter;
 
     private weatherMap(){
         myImageWidth = 1;
         myImageHeight = 1;
-        myOriginalConvertedImageArray = new int[myImageWidth][myImageHeight];
+        currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
         myBoundaries = new BoundaryBundle();
-        myMapImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
-        myName = "BLANK";
+        mapName = "BLANK";
+        bgName = mapName + " - BG";
+        clearName = mapName + " - CLEAR";
     }
 
     public weatherMap(String theName, int theWidth, int theHeight){
         myImageWidth = theWidth;
         myImageHeight = theHeight;
-        myOriginalConvertedImageArray = new int[myImageWidth][myImageHeight];
+        currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
         myBoundaries = new BoundaryBundle();
-        myMapImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
-        myName = theName;
+        mapName = theName;
+        bgName = mapName + " - BG";
+        clearName = mapName + " - CLEAR";
     }
 
-    public void getImageFromURL(String theUrl, String theName) throws IOException {
+    public void updateWeatherArray(String theUrl) throws IOException {
+
+        BufferedImage tempImage = getImageFromURL(theUrl);
+
+        currentWeather = myConverter.get2DArray(tempImage);
+
+        //TESTING
+        writeImageFile(tempImage,clearName);
+
+    }
+
+    public void updateBG(String theUrl) throws IOException {
+
+        boundaryImage = getImageFromURL(theUrl);
+
+        writeImageFile(boundaryImage,bgName);
+
+        updateBoundaryImage();
+
+    }
+
+    public BufferedImage getImageFromURL(String theUrl) throws IOException {
+
+        BufferedImage tempImage = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
+
 
         //TODO add filtering for wunderground URL only? OR leave vanilla?
         try {
 
             URL imageURL = new URL(theUrl);
 
-            myMapImage = ImageIO.read(imageURL);
-
-            myOriginalConvertedImageArray = myConverter.get2DArray(myMapImage);
-
-            writeImageFile(myMapImage,theName);
-
-            boundaryImage = readImageFile(theName + ".png");
+            tempImage = ImageIO.read(imageURL);
 
         } catch (Exception e){
             System.out.println("no image returned");
@@ -70,15 +89,29 @@ public class weatherMap {
                     "encountered an Error \nERROR:: " + e.toString());
         }
 
+        return tempImage;
 
     }
 
-    //temporary limitation of 100 px radius
-    public void addBoundary(Boundary theBound){
+    /**
+     * Draw outer boundary for current Bundle
+     */
+    private void updateBoundaryImage(){
 
-        BufferedImage tempImage = boundaryImage;
 
-        myBoundaries.addBoundary(theBound);
+        drawBound(myBoundaries.getBoundary(0));
+
+        try {
+
+            writeImageFile(boundaryImage,"CurrentBounds - " + mapName);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
+
+    public void drawBound(Boundary theBound) {
 
         PointList thePoints = theBound.getMyPoints();
 
@@ -90,11 +123,9 @@ public class weatherMap {
             int x = p.getMyX();
             int y = p.getMyY();
 
-            myOriginalConvertedImageArray[x][y] = Color.RED.getRGB();
-
             try {
 
-                tempImage.setRGB(x, y, Color.RED.getRGB());
+                boundaryImage.setRGB(x, y, Color.RED.getRGB());
 
             } catch (Exception e){
                 System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
@@ -106,41 +137,13 @@ public class weatherMap {
 
         }
 
-        try {
+    }
 
-            writeImageFile(tempImage,"CurrentBounds - " + myName);
+    //temporary limitation of 100 px radius
+    public void addBoundary(Boundary theBound){
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        myBoundaries.addBoundary(theBound);
 
-        /*for(int i = 0; i < thePoints.size(); i++){
-            Point p = (Point)thePoints.getObject(i);
-
-            int x = p.getMyX();
-            int y = p.getMyY();
-
-            myOriginalConvertedImageArray[x][y] = Color.RED.getRGB();
-
-            try {
-
-                tempImage.setRGB(x, y, Color.RED.getRGB());
-
-            } catch (Exception e){
-                System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
-                        "encountered an Error \nERROR:: " + e.toString());
-
-            }
-
-        }
-
-        try {
-
-            writeImageFile(tempImage,"CurrentBounds - " + myName);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
 
@@ -179,11 +182,6 @@ public class weatherMap {
         return temp;
     }
 
-    private void getImageSize(BufferedImage image){
-        myImageWidth = image.getWidth();
-        myImageHeight = image.getHeight();
-    }
-
     /**
      * Does this do a deep copy?
      *
@@ -208,10 +206,6 @@ public class weatherMap {
         }
 
         return temp;
-    }
-
-    public int[][] getImageArray(){
-        return myOriginalConvertedImageArray;
     }
 
     public int getMyImageWidth() {

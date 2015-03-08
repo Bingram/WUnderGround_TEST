@@ -1,5 +1,4 @@
 import DataStructures.Boundary;
-import DataStructures.BoundaryBundle;
 import DataStructures.Point;
 
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class MAIN {
         mapWidth = 1280;
         mapHeight = 1280;
 
-        myWeatherMap = new weatherMap("Washington",mapWidth,mapHeight);
+        myWeatherMap = new weatherMap("PNW",mapWidth,mapHeight);
 
         degreesWide = myMaxLong - myMinLong;//8.7
         degreesTall = myMaxLat - myMinLat;//6.4
@@ -53,7 +52,7 @@ public class MAIN {
         scaleLat = degreesTall/mapHeight;
 
         String imageSourceClear = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat=" + myMaxLat +
-                "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + mapWidth + "&height=" + mapHeight + "&rainsnow=1&timelabel=1&timelabel.x=525&timelabel.y=41&reproj.automerc=1";
+                "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + mapWidth + "&height=" + mapHeight + "&rainsnow=1&reproj.automerc=1";
 
         String imageSourceFull = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat=" + myMaxLat +
                 "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + mapWidth + "&height=" + mapHeight + "&newmaps=1";
@@ -65,17 +64,13 @@ public class MAIN {
         try {
 
             myCenter = gpsToXY(myLong,myLat);
-            Point secondCenter = gpsToXY(-122.607422,47.938513);
 
             radiusOne = new Boundary(myCenter.getMyY(),myCenter.getMyX(),100);
             //temporary limitation of 100 px radius
-            radiusTwo =new Boundary(secondCenter.getMyY(),secondCenter.getMyX(),100);
-
-            myWeatherMap.getImageFromURL(imageSourceFull, "full-image-WA");
-            //myWeatherMap.getImageFromURL(imageSourceClear, "clear-image-WA");
 
             myWeatherMap.addBoundary(radiusOne);
-            myWeatherMap.addBoundary(radiusTwo);
+            myWeatherMap.updateWeatherArray(imageSourceClear);
+            myWeatherMap.updateBG(imageSourceFull);
 
             //Testing found that the alpha channel value for non alpha values
             //equals -16777216 which translates to a clear pixel or no weather
