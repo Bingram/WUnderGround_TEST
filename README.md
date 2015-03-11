@@ -74,3 +74,14 @@ Each Boundary currently only supports a single level of checking at the outermos
 Future implementations will have multiple levels for checking in order to gauge a time frame
 for when weather is expected to arrive at the center of the designated Boundary.
 
+
+
+#TODO
+
+-[X] Make weatherMap more modular for server/client
+-[X] Implement basic bounds checking
+-[] Implement server iteration (RESTful?)
+-[] Fork for client
+    -[] Web client
+    -[] Android client
+
