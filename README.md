@@ -78,10 +78,10 @@ for when weather is expected to arrive at the center of the designated Boundary.
 
 #TODO
 
--[X] Make weatherMap more modular for server/client
--[X] Implement basic bounds checking
--[] Implement server iteration (RESTful?)
--[] Fork for client
-    -[] Web client
-    -[] Android client
+- [X] Make weatherMap more modular for server/client
+- [X] Implement basic bounds checking
+- [] Implement server iteration (RESTful?)
+- [] Fork for client
+    - [] Web client
+    - [] Android client
 
