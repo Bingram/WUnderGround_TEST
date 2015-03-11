@@ -28,7 +28,7 @@ a 2D array for reference against a Boundary as set by a user.
 ###Boundary System 
 The main function of the Boundary system is based on the MidPoint Circle algorithm
 
-'''Java
+```java
 public static void DrawCircle(int x0, int y0, int radius)
 {
   int x = radius;
@@ -57,7 +57,7 @@ public static void DrawCircle(int x0, int y0, int radius)
     }
   }
 }
-'''
+```
 
 This calculates a boundary circle that can be referenced against a 2D array of the current 
 weather conditions. This allows for checking each point on a Boundary against the matching 
