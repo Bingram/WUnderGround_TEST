@@ -5,7 +5,7 @@
 ##A backend server for retrieving weather information and determining whether weather is incoming
 
 The weather radar started as a simple idea of being able to have a preemptive warning system for incoming rain 
-when I was outside for the afternoon, either working in ym yard or walking in a nearby park.
+when I was outside for the afternoon, either working in my yard, at a nearby park or on any outdoor event.
 
 The larger idea is to have a system that retrieves the weather information and distributes out
 to all registered users, and their device can determine where the weather is relative to
