@@ -11,7 +11,7 @@ public class BoundaryChecker {
 
     private int[][] myWeatherArray;
 
-    private BoundaryChecker(){
+    public BoundaryChecker(){
         myWeatherArray = new int[0][0];
     }
 
@@ -20,7 +20,7 @@ public class BoundaryChecker {
 
     }
 
-    public double checkPercent(PointList theList){
+    private double checkPercent(PointList theList){
         double result = 0.0;
         int size = theList.size();
         int count = 0;
@@ -48,54 +48,37 @@ public class BoundaryChecker {
      * Does not check levels, only defaults to outer bound 0
      * @return boolean of percentage > 30%
      */
-    public boolean quickCheckOuter(Boundary theBound){
-        boolean result = false;
+    public double quickCheckOuter(Boundary theBound){
 
-        double test = checkPercent(theBound.getQuads()[5]);
+        return checkPercent(theBound.getQuads()[5]);
 
-        if (test > 0.3){
-            result = true;
-        }
-
-        return result;
     }
 
-    public boolean CheckBoundaryQuad(Boundary theBound, int quad){
-        boolean result = false;
+    public double CheckBoundaryQuad(Boundary theBound, int quad){
 
-        double test = checkPercent(theBound.getQuads()[quad]);
+        return checkPercent(theBound.getQuads()[quad]);
 
-        if (test > 0.3){
-            result = true;
-        }
-
-        return result;
     }
 
-    public boolean fullCheckOuter(Boundary theBound){
-        boolean result = false;
+    public double fullCheckOuter(Boundary theBound){
 
+        int count = 0;
 
-        if (quickCheckOuter(theBound)){
+        int size = theBound.getQuads().length;
 
-            int count = 0;
+        for (int i = 0; i < size; i++) {
 
-            int size = theBound.getQuads().length;
+            if (checkPercent(theBound.getQuads()[i]) >= 0.3){
+                count++;
+            }
 
-            for (int i = 0; i < size; i++) {
-
-                if (checkPercent(theBound.getQuads()[i]) >= 0.3){
-                    count++;
-                }
-
-                if (count > (size/2)){//greater than 50% coverage
-                    result = true;
-                    i=size;//stop loop here
-                }
-
+            if (count > (size/2)){//greater than 50% coverage
+                
+                i=size;//stop loop here
             }
 
         }
+
 
 
         return result;

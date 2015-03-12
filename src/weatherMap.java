@@ -13,7 +13,8 @@ import java.net.URL;
 /**
  * Created by Brian on 2/12/2015.
  *
- * Creates a 2D array of integer values from an image given a URL.
+ * An object that can retrieve and analyze current weather
+ * conditions relative to a Boundary area as chosen by user
  */
 public class weatherMap {
 
@@ -26,11 +27,14 @@ public class weatherMap {
 
     private aRGBConverter myConverter;
 
+    private BoundaryChecker boundaryChecker;
+
     private weatherMap(){
         myImageWidth = 1;
         myImageHeight = 1;
         currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
+        boundaryChecker = new BoundaryChecker();
         myBoundaries = new BoundaryBundle();
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = "BLANK";
@@ -43,6 +47,7 @@ public class weatherMap {
         myImageHeight = theHeight;
         currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
+        boundaryChecker = new BoundaryChecker();
         myBoundaries = new BoundaryBundle();
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = theName;
@@ -50,6 +55,12 @@ public class weatherMap {
         clearName = mapName + "-CLEAR";
     }
 
+    /**
+     * Updates the current weather array used to for bounds checking
+     *
+     * @param theUrl String for the URL of a clear weather map
+     * @throws IOException when file or URL grab encounters an error
+     */
     public void updateWeatherArray(String theUrl) throws IOException {
 
         BufferedImage tempImage = getImageFromURL(theUrl);
@@ -61,16 +72,31 @@ public class weatherMap {
 
     }
 
+    /**
+     * Updates the current weather imagery with full BG
+     *
+     * @param theUrl String for the URL of a full BG weather map
+     * @throws IOException when file or URL grab encounters an error
+     */
     public void updateBG(String theUrl) throws IOException {
 
-        boundaryImage = getImageFromURL(theUrl);
+        boundaryImage = getImageFromURL(theUrl);//update Buffered Image
 
-        writeImageFile(boundaryImage,bgName);//update current BG
+        writeImageFile(boundaryImage,bgName);//update current BG file
 
-        updateBoundaryImage();
+        updateBoundaryImage();//add bounds to current full BG map
 
     }
 
+
+
+    /**
+     * Accepts a given URL and retrieves the image returned as a Buffered Image
+     *
+     * @param theUrl String of the URL to retrieve image
+     * @return Buffered Image of image retrieved from URL
+     * @throws IOException
+     */
     public BufferedImage getImageFromURL(String theUrl) throws IOException {
 
         BufferedImage tempImage = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
@@ -112,6 +138,11 @@ public class weatherMap {
         
     }
 
+    /**
+     * Draws a boundary on the boundaryImage BufferedImage
+     *
+     * @param theBound Boundary to draw on BufferedImage of map
+     */
     public void drawBound(Boundary theBound) {
 
         PointList thePoints = theBound.getMyPoints();
@@ -148,7 +179,13 @@ public class weatherMap {
     }
 
 
-
+    /**
+     * Write a given BufferedImage to a file with the String fileName
+     *
+     * @param theImage BufferedImage to write to file
+     * @param fileName String of file name to write
+     * @throws IOException
+     */
     public void writeImageFile(BufferedImage theImage,String fileName) throws IOException{
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -165,6 +202,13 @@ public class weatherMap {
 
     }
 
+    /**
+     * Reads a given file and returns a BufferedImage of the file
+     *
+     * @param fileName String of file name to read
+     * @return BufferedImage of file
+     * @throws IOException
+     */
     public BufferedImage readImageFile(String fileName) throws IOException{
 
         BufferedImage temp = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
