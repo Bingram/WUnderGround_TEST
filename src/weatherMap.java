@@ -67,8 +67,10 @@ public class weatherMap {
 
         currentWeather = myConverter.get2DArray(tempImage);
 
+        boundaryChecker.updateWeather(currentWeather);
+
         //TESTING
-        writeImageFile(tempImage,clearName);
+        //writeImageFile(tempImage,clearName);
 
     }
 

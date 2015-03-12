@@ -7,6 +7,7 @@ import DataStructures.PointList;
  */
 public class BoundaryChecker {
 
+    private double THRESHOLD = 0.3;//percentage of points with rain before considered "covered"
     private final int CLEAR = -16777216;
 
     private int[][] myWeatherArray;
@@ -68,7 +69,7 @@ public class BoundaryChecker {
 
         for (int i = 0; i < size; i++) {
 
-            if (checkPercent(theBound.getQuads()[i]) >= 0.3){
+            if (checkPercent(theBound.getQuads()[i]) >= THRESHOLD){
                 count++;
             }
 
@@ -79,15 +80,16 @@ public class BoundaryChecker {
 
         }
 
-
-
-        return result;
+        return count/8;
     }
 
     public void updateWeather(int[][] newWeather){
         myWeatherArray = newWeather;
     }
 
+    public void setTHRESHOLD(double newThreshold) {
+        this.THRESHOLD = THRESHOLD;
+    }
 
 
 
