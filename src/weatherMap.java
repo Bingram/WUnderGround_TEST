@@ -23,6 +23,8 @@ public class weatherMap {
     private int myImageWidth,myImageHeight;
     private BufferedImage boundaryImage;
 
+    private String bgURL,clearURL;
+
     private String mapName,bgName,clearName;
 
     private aRGBConverter myConverter;
@@ -70,8 +72,22 @@ public class weatherMap {
         boundaryChecker.updateWeather(currentWeather);
 
         //TESTING
-        //writeImageFile(tempImage,clearName);
+        writeImageFile(tempImage,clearName);
 
+    }
+
+    public void updateWeather() throws IOException{
+        BufferedImage clearImage = getImageFromURL(clearURL);//get latest clear image
+
+        currentWeather = myConverter.get2DArray(clearImage);//update weather array
+
+        boundaryChecker.updateWeather(currentWeather);//update boundary checker array
+
+        boundaryImage = getImageFromURL(bgURL);//update BG Image
+
+        writeImageFile(boundaryImage,bgName);//update current BG file
+
+        updateBoundaryImage();//add bounds to current full BG map
     }
 
     /**
@@ -261,5 +277,13 @@ public class weatherMap {
 
     public int getMyImageHeight() {
         return myImageHeight;
+    }
+
+    public void setClearURL(String theURL) {
+        clearURL = theURL;
+    }
+
+    public void setBGURL(String theURL) {
+        bgURL = theURL;
     }
 }

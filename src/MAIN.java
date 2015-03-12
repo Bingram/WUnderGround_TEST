@@ -13,10 +13,11 @@ import java.io.IOException;
 public class MAIN {
 
 
+    //http://maps.google.com/maps?q=45.50367,-122.41943
 
-    private static Double myLat = 47.6334;
+    private static Double myLat = 45.50367;
 
-    private static Double myLong = -122.70609;
+    private static Double myLong = -122.41943;
 
     //new margins based on testing using Googlemaps
     /*private static Double marginLong = 3.0;
@@ -57,15 +58,12 @@ public class MAIN {
         String imageSourceFull = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat=" + myMaxLat +
                 "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + mapWidth + "&height=" + mapHeight + "&newmaps=1";
 
-        System.out.println("Scale Lat: "+scaleLat+" Lon: " +scaleLon);
-        System.out.println();
-        System.out.println("Clear Image URL: "+imageSourceClear);
-        System.out.println("Full Image URL: "+imageSourceFull);
         try {
 
             myCenter = gpsToXY(myLong,myLat);
 
             radiusOne = new Boundary(myCenter.getMyY(),myCenter.getMyX(),100);
+
             //temporary limitation of 100 px radius
 
             myWeatherMap.addBoundary(radiusOne);
@@ -79,23 +77,6 @@ public class MAIN {
             e.printStackTrace();
         }
 
-    }
-
-    private boolean checkWeatherQuad(){
-        boolean result = false;
-
-        /**
-         * This may need to be broken in a to helper class if I get a
-         * more complex checking algorithm.
-         *
-         * Currently the plan is to check starting at points in the West
-         * quadrants then moving out in both directions.
-         *
-         * Next idea is to check wind direction and use that to determine
-         * best starting location.
-         */
-
-        return result;
     }
 
     /*The scale for lat is 1' for ~111,000m@4decimals
@@ -113,16 +94,8 @@ public class MAIN {
         Double latDiff = myMaxLat - lat;
         Double lonDiff = lon - myMinLong;
 
-        System.out.println("Inside gpsToXY...");
-        System.out.println("Input: Lat|" + lat + " Lon|" + lon);
-        System.out.println("Start Point: Lat|" + myMaxLat + " Lon|" + myMinLong);
-        System.out.println("Difference: Lat|" + latDiff + " Lon|" + lonDiff);
-
         temp.setMyX((int) ((latDiff) / scaleLat));
         temp.setMyY((int) ((lonDiff) / scaleLon));
-
-        System.out.println("XY Values: X|" + temp.getMyX() + " Y|" + temp.getMyY());
-        System.out.println();
 
         return temp;
     }
