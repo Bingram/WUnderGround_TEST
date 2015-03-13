@@ -15,9 +15,9 @@ public class MAIN {
 
     //http://maps.google.com/maps?q=45.50367,-122.41943
 
-    private static Double myLat = 45.50367;
+    private static Double myLat = 47.63339;
 
-    private static Double myLong = -122.41943;
+    private static Double myLong = -122.70667;
 
     //new margins based on testing using Googlemaps
     /*private static Double marginLong = 3.0;

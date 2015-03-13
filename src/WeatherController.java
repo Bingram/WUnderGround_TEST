@@ -31,12 +31,13 @@ public class WeatherController implements Runnable{
     }
 
     public void setBoundary(double theLong, double theLat, int theRadius){
-        Point temp = gpsToXY(theLong,theLat);
+        Point tempPoint = gpsToXY(theLong,theLat);
 
         if (theRadius > 100){theRadius = 100;}//ensure radius is no more than 100
 
-        myWeatherMap.addBoundary(new Boundary(temp.getMyX(),temp.getMyY(),theRadius));
+        Boundary temp = new Boundary(tempPoint.getMyY(),tempPoint.getMyX(),theRadius);
 
+        myWeatherMap.addBoundary(temp);
     }
 
     /*The scale for lat is 1' for ~111,000m@4decimals
@@ -76,6 +77,8 @@ public class WeatherController implements Runnable{
                 myWeatherMap.updateWeather();
 
 
+                System.out.println();
+                System.out.println("Current Coverage % : "+myWeatherMap.getCoverage());
 
 
                 Thread.sleep(600000);//sleep 10 minutes

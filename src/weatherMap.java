@@ -72,7 +72,7 @@ public class weatherMap {
         boundaryChecker.updateWeather(currentWeather);
 
         //TESTING
-        writeImageFile(tempImage,clearName);
+        //writeImageFile(tempImage,clearName);
 
     }
 
@@ -199,6 +199,7 @@ public class weatherMap {
     public void addBoundary(Boundary theBound){
 
         myBoundaries.addBoundary(theBound);
+        boundaryChecker.setMyBoundary(myBoundaries.getBoundary(0));
 
     }
 
