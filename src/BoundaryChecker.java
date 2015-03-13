@@ -120,11 +120,8 @@ public class BoundaryChecker implements Runnable{
     @Override
     public void run() {
 
-        while(!boundChecked){
-            fullCheckOuter();
-        }
+        fullCheckOuter();
 
-        boundChecked = false;
     }
 
     public double getCoveragePercent() {

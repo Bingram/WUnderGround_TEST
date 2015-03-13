@@ -74,7 +74,7 @@ public class WeatherController implements Runnable{
             try {
 
 
-                myWeatherMap.updateWeather();
+                myWeatherMap.run();
 
 
                 System.out.println();
@@ -83,9 +83,6 @@ public class WeatherController implements Runnable{
 
                 Thread.sleep(600000);//sleep 10 minutes
 
-
-            } catch (IOException e) {
-                e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

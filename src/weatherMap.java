@@ -16,7 +16,7 @@ import java.net.URL;
  * An object that can retrieve and analyze current weather
  * conditions relative to a Boundary area as chosen by user
  */
-public class weatherMap {
+public class weatherMap implements Runnable{
 
     private int[][] currentWeather;
     private BoundaryBundle myBoundaries;
@@ -292,5 +292,14 @@ public class weatherMap {
 
     public void setBGURL(String theURL) {
         bgURL = theURL;
+    }
+
+    @Override
+    public void run() {
+        try {
+            updateWeather();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
