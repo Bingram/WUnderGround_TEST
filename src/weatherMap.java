@@ -88,6 +88,12 @@ public class weatherMap {
         writeImageFile(boundaryImage,bgName);//update current BG file
 
         updateBoundaryImage();//add bounds to current full BG map
+
+        boundaryChecker.run();
+    }
+
+    public double getCoverage(){
+        return boundaryChecker.getCoveragePercent();
     }
 
     /**
