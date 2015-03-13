@@ -213,13 +213,17 @@ public class weatherMap implements Runnable{
      */
     public void writeImageFile(BufferedImage theImage,String fileName) throws IOException{
         try {
+            File imageFile = new File(fileName + ".png");
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(theImage, "png", baos );
 
             //Persist - in this case to a file for later reference
-            FileOutputStream fos = new FileOutputStream(new File(fileName+".png"));
+
+            FileOutputStream fos = new FileOutputStream(imageFile);
             baos.writeTo(fos);
             fos.close();
+
         } catch (Exception e){
             System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
                     "encountered an Error \nERROR:: " + e.toString());
