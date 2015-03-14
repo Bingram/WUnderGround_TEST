@@ -2,6 +2,8 @@ import DataStructures.Boundary;
 import DataStructures.Point;
 import DataStructures.PointList;
 
+import java.awt.*;
+
 /**
  * Created by Brian on 2/20/2015.
  */
@@ -48,7 +50,12 @@ public class BoundaryChecker implements Runnable{
         for (int i = 0; i < size; i++) {
             Point p = (Point)theList.getObject(i);
 
-            if (myWeatherArray[p.getMyX()][p.getMyY()] != CLEAR) {
+            int pixel = this.myWeatherArray[p.getMyX()][p.getMyY()];
+
+            System.out.println();
+            System.out.println("Current Pixel Value: " + p.getMyX() + p.getMyY() + "@" +pixel);
+
+            if (pixel != CLEAR) {
                 count++;
             }
 
@@ -81,12 +88,14 @@ public class BoundaryChecker implements Runnable{
     public double fullCheckOuter(){
 
         int count = 0;
+        double percent = 0.0;
 
-        int size = myBoundary.getQuads().length;
+        int size = this.myBoundary.getQuads().length;
 
         for (int i = 0; i < size; i++) {
 
-            if (checkPercent(myBoundary.getQuads()[i]) >= THRESHOLD){
+
+            if (checkPercent(this.myBoundary.getQuads()[i]) >= THRESHOLD){
                 count++;
             }
 
@@ -99,7 +108,7 @@ public class BoundaryChecker implements Runnable{
 
         boundChecked = true;
 
-        coveragePercent = count/8;
+        this.coveragePercent += (count/(8.0))*100;
 
         return coveragePercent;
     }
@@ -125,6 +134,6 @@ public class BoundaryChecker implements Runnable{
     }
 
     public double getCoveragePercent() {
-        return coveragePercent;
+        return this.coveragePercent;
     }
 }

@@ -72,16 +72,24 @@ public class weatherMap implements Runnable{
         boundaryChecker.updateWeather(currentWeather);
 
         //TESTING
-        //writeImageFile(tempImage,clearName);
+        writeImageFile(tempImage,clearName);
 
     }
 
     public void updateWeather() throws IOException{
         BufferedImage clearImage = getImageFromURL(clearURL);//get latest clear image
 
+        Boundary currentBound = myBoundaries.getBoundary(0);
+
+
+        //TESTING
+        writeImageFile(clearImage,clearName);
+
         currentWeather = myConverter.get2DArray(clearImage);//update weather array
 
-        boundaryChecker.updateWeather(currentWeather);//update boundary checker array
+        boundaryChecker = new BoundaryChecker(myConverter.get2DArray(clearImage),currentBound);
+
+        boundaryChecker.updateWeather(myConverter.get2DArray(clearImage));//update boundary checker array
 
         boundaryImage = getImageFromURL(bgURL);//update BG Image
 
@@ -90,6 +98,8 @@ public class weatherMap implements Runnable{
         updateBoundaryImage();//add bounds to current full BG map
 
         boundaryChecker.run();
+
+
     }
 
     public double getCoverage(){
