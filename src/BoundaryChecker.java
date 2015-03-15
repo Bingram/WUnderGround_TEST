@@ -16,6 +16,10 @@ public class BoundaryChecker implements Runnable{
 
     private int[][] myWeatherArray;
 
+    public Boundary getMyBoundary() {
+        return myBoundary;
+    }
+
     private Boundary myBoundary;
 
     private double coveragePercent;

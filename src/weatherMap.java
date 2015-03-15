@@ -76,6 +76,18 @@ public class weatherMap implements Runnable{
 
     }
 
+    public void updateTestCurrentWeather(int[][] weather){
+        currentWeather = weather;
+        boundaryChecker = new BoundaryChecker(currentWeather,myBoundaries.getBoundary(0));
+
+        if (boundaryChecker.getMyBoundary() != null){
+
+            boundaryChecker.setMyBoundary(myBoundaries.getBoundary(0));
+        }
+
+        boundaryChecker.updateWeather(currentWeather);
+    }
+
     public void updateWeather() throws IOException{
         BufferedImage clearImage = getImageFromURL(clearURL);//get latest clear image
 
@@ -101,6 +113,7 @@ public class weatherMap implements Runnable{
 
 
     }
+
 
     public double getCoverage(){
         return boundaryChecker.getCoveragePercent();
