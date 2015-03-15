@@ -14,6 +14,8 @@ public class WeatherController implements Runnable{
     private static Double myMinLat = 42.6;//Halfway into OR South
     private static Double myMinLong = -125.5;//A few miles of West coast WA
 
+    private int WAIT_TIME,MINUTES;
+
     private String BASE_URL = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat="+ myMaxLat +
             "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + MAPDIMENSION + "&height=" + MAPDIMENSION;
     private String clearURL = BASE_URL + "&rainsnow=1&reproj.automerc=1";
@@ -28,6 +30,8 @@ public class WeatherController implements Runnable{
         myWeatherMap.setClearURL(clearURL);
         myWeatherMap.setBGURL(bgURL);
         myPoint = new Point();
+        MINUTES = 10;
+        WAIT_TIME = MINUTES*60*1000;
     }
 
     public void setBoundary(double theLong, double theLat, int theRadius){
@@ -36,6 +40,15 @@ public class WeatherController implements Runnable{
         if (theRadius > 100){theRadius = 100;}//ensure radius is no more than 100
 
         Boundary temp = new Boundary(tempPoint.getMyY(),tempPoint.getMyX(),theRadius);
+
+        myWeatherMap.addBoundary(temp);
+    }
+
+    public void setINTBoundary(int theX, int theY, int theRadius){
+
+        if (theRadius > 100){theRadius = 100;}//ensure radius is no more than 100
+
+        Boundary temp = new Boundary(theX,theY,theRadius);
 
         myWeatherMap.addBoundary(temp);
     }
@@ -67,6 +80,11 @@ public class WeatherController implements Runnable{
         return temp;
     }
 
+    public void setWaitTime(int time) {
+        MINUTES = time;
+        WAIT_TIME = MINUTES * 60 * 1000;
+    }
+
     @Override
     public void run() {
 
@@ -81,7 +99,7 @@ public class WeatherController implements Runnable{
                 System.out.println("Current Coverage % : "+myWeatherMap.getCoverage());
 
 
-                Thread.sleep(600000);//sleep 10 minutes
+                Thread.sleep(WAIT_TIME);//sleep 10 minutes
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -50,7 +50,7 @@ public class BoundaryChecker implements Runnable{
         for (int i = 0; i < size; i++) {
             Point p = (Point)theList.getObject(i);
 
-            int pixel = this.myWeatherArray[p.getMyX()][p.getMyY()];
+            int pixel = myWeatherArray[p.getMyX()][p.getMyY()];
 
             System.out.println();
             System.out.println("Current Pixel Value: " + p.getMyX() + p.getMyY() + "@" +pixel);
