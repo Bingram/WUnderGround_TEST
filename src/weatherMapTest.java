@@ -28,6 +28,8 @@ public class weatherMapTest extends TestCase {
 
         mapOne = new weatherMap("TEST",WIDTH,HEIGHT);
         mapTwo = new weatherMap("TEST_2",WIDTH,HEIGHT);
+        splitMap = new weatherMap("SPLIT",WIDTH,HEIGHT);
+        quarterMap = new weatherMap("QUARTER",WIDTH,HEIGHT);
         mapTwo.updateTestCurrentWeather(getMap(CLEAR));
         mapOne.updateTestCurrentWeather(getMap(Color.BLUE.getRGB()));
 
@@ -72,9 +74,16 @@ public class weatherMapTest extends TestCase {
     public int[][] getSplitMap(int color){
         int[][] temp = new int[WIDTH][HEIGHT];
 
-        for (int i = 0; i < WIDTH; i++) {
+        for (int i = 0; i < WIDTH/2; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 temp[i][j] = color;
+            }
+
+        }
+
+        for (int i = WIDTH/2; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                temp[i][j] = CLEAR;
             }
         }
 
