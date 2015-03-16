@@ -76,16 +76,12 @@ public class weatherMap implements Runnable{
 
     }
 
-    public void updateTestCurrentWeather(int[][] weather){
+    public void updateTestCurrentWeather(int[][] weather, Boundary theBound){
         currentWeather = weather;
-        boundaryChecker = new BoundaryChecker(currentWeather,myBoundaries.getBoundary(0));
-
-        if (boundaryChecker.getMyBoundary() != null){
-
-            boundaryChecker.setMyBoundary(myBoundaries.getBoundary(0));
-        }
+        boundaryChecker = new BoundaryChecker(currentWeather,theBound);
 
         boundaryChecker.updateWeather(currentWeather);
+        boundaryChecker.fullCheckOuter();
     }
 
     public void updateWeather() throws IOException{
@@ -114,9 +110,33 @@ public class weatherMap implements Runnable{
 
     }
 
+    public void writeArray2File(int[][] theArray, String fileName){
+        try {
+            BufferedImage img = new BufferedImage(theArray.length,theArray.length,BufferedImage.TYPE_INT_ARGB);
+            try {
+                img = ImageIO.read(new File(fileName + ".png"));
+            } catch (IOException e) {
+            }
+
+
+
+            for (int i = 0; i < 100; i++) {
+                for (int j = 0; j < 100; j++) {
+                    int rgb = theArray[i][j];
+                    img.setRGB(i, j, rgb);
+                }
+            }
+
+            // retrieve image
+            File outputfile = new File(fileName + ".png");
+            ImageIO.write(img, "png", outputfile);
+        } catch (IOException e) {
+        }
+    }
+
 
     public double getCoverage(){
-        return boundaryChecker.getCoveragePercent();
+        return boundaryChecker.fullCheckOuter();
     }
 
     /**
@@ -222,7 +242,7 @@ public class weatherMap implements Runnable{
     public void addBoundary(Boundary theBound){
 
         myBoundaries.addBoundary(theBound);
-        boundaryChecker.setMyBoundary(myBoundaries.getBoundary(0));
+        boundaryChecker.setMyBoundary(theBound);
 
     }
 

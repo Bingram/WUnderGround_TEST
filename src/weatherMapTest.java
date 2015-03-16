@@ -1,3 +1,4 @@
+import DataStructures.Boundary;
 import junit.framework.TestCase;
 
 import java.awt.*;
@@ -30,13 +31,14 @@ public class weatherMapTest extends TestCase {
         mapTwo = new weatherMap("TEST_2",WIDTH,HEIGHT);
         splitMap = new weatherMap("SPLIT",WIDTH,HEIGHT);
         quarterMap = new weatherMap("QUARTER",WIDTH,HEIGHT);
-        mapTwo.updateTestCurrentWeather(getMap(CLEAR));
-        mapOne.updateTestCurrentWeather(getMap(Color.BLUE.getRGB()));
+
+
+
 
 
     }
 
-    public int[][] getMap(int color){
+    public int[][] getFullMap(int color){
         int[][] temp = new int[WIDTH][HEIGHT];
 
         for (int i = 0; i < WIDTH; i++) {
@@ -74,20 +76,48 @@ public class weatherMapTest extends TestCase {
     public int[][] getSplitMap(int color){
         int[][] temp = new int[WIDTH][HEIGHT];
 
-        for (int i = 0; i < WIDTH/2; i++) {
+        for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 temp[i][j] = color;
             }
 
         }
-
+/*
         for (int i = WIDTH/2; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 temp[i][j] = CLEAR;
             }
-        }
+        }*/
 
         return temp;
+    }
+
+    public void testFullMap() throws Exception{
+        Boundary theBound = new Boundary(WIDTH/2,HEIGHT/2,WIDTH/4);
+        mapTwo.updateTestCurrentWeather(getFullMap(CLEAR),theBound);
+        mapOne.updateTestCurrentWeather(getFullMap(Color.BLUE.getRGB()),theBound);
+
+    }
+
+    public void testSplitMap() throws Exception{
+        Boundary theBound = new Boundary(WIDTH/2,HEIGHT/2,WIDTH/4);
+        int[][] theArray = getSplitMap(Color.BLUE.getRGB());
+        splitMap.writeArray2File(theArray,"SplitMap");
+        splitMap.updateTestCurrentWeather(theArray,theBound);
+    }
+
+    public void testQuarterMap() throws Exception{
+        Boundary theBound = new Boundary(WIDTH/2,HEIGHT/2,(WIDTH/2)-1);
+        quarterMap.addBoundary(theBound);
+        int[][] theArray = getQuarterMap(Color.RED.getRGB());
+        quarterMap.writeArray2File(theArray,"QuarterMap");
+        quarterMap.updateTestCurrentWeather(theArray,theBound);
+
+        Double coverage = quarterMap.getCoverage();
+
+
+        assertEquals(0.0, coverage);
+
     }
 
     public void testUpdateWeatherArray() throws Exception {

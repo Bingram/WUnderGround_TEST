@@ -10,7 +10,8 @@ import java.awt.*;
 public class BoundaryChecker implements Runnable{
 
     private double THRESHOLD = 0.3;//percentage of points with rain before considered "covered"
-    private final int CLEAR = -16777216;
+
+    private int CLEAR = -16777216;
 
     private Boolean boundChecked;
 
@@ -33,7 +34,7 @@ public class BoundaryChecker implements Runnable{
 
     public BoundaryChecker(int[][] theArray){
         myWeatherArray = theArray;
-        myBoundary = null;
+        myBoundary = new Boundary(0,0,1);
         coveragePercent = 0.0;
     }
 
@@ -47,7 +48,7 @@ public class BoundaryChecker implements Runnable{
     private double checkPercent(PointList theList){
         double result = 0.0;
         int size = theList.size();
-        int count = 0;
+        double count = 0.0;
 
         //TODO
 
@@ -55,9 +56,6 @@ public class BoundaryChecker implements Runnable{
             Point p = (Point)theList.getObject(i);
 
             int pixel = myWeatherArray[p.getMyX()][p.getMyY()];
-
-            System.out.println();
-            System.out.println("Current Pixel Value: " + p.getMyX() + p.getMyY() + "@" +pixel);
 
             if (pixel != CLEAR) {
                 count++;
@@ -67,7 +65,9 @@ public class BoundaryChecker implements Runnable{
 
         result += (count/size);
 
-
+/*
+        System.out.println();
+        System.out.println("CurrentCoverage: " + result);*/
         return result;
     }
 
@@ -94,27 +94,33 @@ public class BoundaryChecker implements Runnable{
         int count = 0;
         double percent = 0.0;
 
-        int size = this.myBoundary.getQuads().length;
+        int size = myBoundary.getQuads().length;
 
         for (int i = 0; i < size; i++) {
 
 
-            if (checkPercent(this.myBoundary.getQuads()[i]) >= THRESHOLD){
+            /*if (checkPercent(this.myBoundary.getQuads()[i]) >= THRESHOLD){
                 count++;
-            }
+            }*/
 
-            if (count > (size/2)){//greater than 50% coverage
+            double temp = checkPercent(myBoundary.getQuads()[i]);
+            percent += temp;
+            System.out.println("Coverage at Quad " + i + " : " + temp);
+
+            /*if (count > (size/2)){//greater than 50% coverage
                 
                 i=size;//stop loop here
-            }
+            }*/
 
         }
 
         boundChecked = true;
 
-        this.coveragePercent += (count/(8.0))*100;
+        System.out.println("Current Full Check Coverage: " + percent/8.0);
 
-        return coveragePercent;
+        coveragePercent = percent/8.0;
+
+        return percent;
     }
 
     public void updateWeather(int[][] newWeather){
@@ -129,6 +135,13 @@ public class BoundaryChecker implements Runnable{
         this.THRESHOLD = THRESHOLD;
     }
 
+    public int getCLEAR() {
+        return CLEAR;
+    }
+
+    public void setCLEAR(int CLEAR) {
+        this.CLEAR = CLEAR;
+    }
 
     @Override
     public void run() {
@@ -138,6 +151,6 @@ public class BoundaryChecker implements Runnable{
     }
 
     public double getCoveragePercent() {
-        return this.coveragePercent;
+        return coveragePercent;
     }
 }
