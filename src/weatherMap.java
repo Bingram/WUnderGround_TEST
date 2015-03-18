@@ -120,8 +120,8 @@ public class weatherMap implements Runnable{
 
 
 
-            for (int i = 0; i < 100; i++) {
-                for (int j = 0; j < 100; j++) {
+            for (int i = 0; i < theArray.length; i++) {
+                for (int j = 0; j < theArray[0].length; j++) {
                     int rgb = theArray[i][j];
                     img.setRGB(i, j, rgb);
                 }
@@ -136,7 +136,7 @@ public class weatherMap implements Runnable{
 
 
     public double getCoverage(){
-        return boundaryChecker.fullCheckOuter();
+        return boundaryChecker.getCoveragePercent();
     }
 
     /**

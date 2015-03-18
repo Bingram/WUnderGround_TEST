@@ -39,6 +39,18 @@ public class weatherMapTest extends TestCase {
     }
 
     public int[][] getFullMap(int color){
+        int[][] temp = getClearMap(CLEAR);
+
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                temp[i][j] = color;
+            }
+        }
+
+        return temp;
+    }
+
+    public int[][] getClearMap(int color){
         int[][] temp = new int[WIDTH][HEIGHT];
 
         for (int i = 0; i < WIDTH; i++) {
@@ -51,51 +63,46 @@ public class weatherMapTest extends TestCase {
     }
 
     public int[][] getQuarterMap(int color){
-        int[][] temp = new int[WIDTH][HEIGHT];
+        int[][] temp = getClearMap(CLEAR);
 
         for (int i = 0; i < WIDTH/2; i++) {
             for (int j = 0; j < HEIGHT/2; j++) {
                 temp[i][j] = color;
             }
 
-            for (int k = HEIGHT/2; k < HEIGHT; k++) {
-                temp[i][k] = CLEAR;
-            }
-
-        }
-
-        for (int i = WIDTH/2; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                temp[i][j] = CLEAR;
-            }
         }
 
         return temp;
     }
 
     public int[][] getSplitMap(int color){
-        int[][] temp = new int[WIDTH][HEIGHT];
+        int[][] temp = getClearMap(CLEAR);
 
-        for (int i = 0; i < WIDTH; i++) {
+        for (int i = 0; i < WIDTH/2; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 temp[i][j] = color;
             }
 
         }
-/*
-        for (int i = WIDTH/2; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                temp[i][j] = CLEAR;
-            }
-        }*/
 
         return temp;
     }
 
     public void testFullMap() throws Exception{
         Boundary theBound = new Boundary(WIDTH/2,HEIGHT/2,WIDTH/4);
-        mapTwo.updateTestCurrentWeather(getFullMap(CLEAR),theBound);
-        mapOne.updateTestCurrentWeather(getFullMap(Color.BLUE.getRGB()),theBound);
+        int[][] redFull = getFullMap(Color.RED.getRGB());
+        int[][] blueFull = getFullMap(Color.BLUE.getRGB());
+        mapTwo.updateTestCurrentWeather(redFull,theBound);
+        mapOne.updateTestCurrentWeather(blueFull,theBound);
+        mapOne.writeArray2File(blueFull,"Blue_FULL");
+        mapTwo.writeArray2File(redFull,"Red_FULL");
+
+        Double coverage1 = (double) Math.round(mapOne.getCoverage() * 100) / 100;
+        Double coverage2 = (double) Math.round(mapTwo.getCoverage() * 100) / 100;
+
+        assertEquals(coverage1, coverage2);
+        assertEquals(1.0, coverage1);
+        assertEquals(1.0, coverage2);
 
     }
 
@@ -104,6 +111,11 @@ public class weatherMapTest extends TestCase {
         int[][] theArray = getSplitMap(Color.BLUE.getRGB());
         splitMap.writeArray2File(theArray,"SplitMap");
         splitMap.updateTestCurrentWeather(theArray,theBound);
+
+        Double coverage = (double) Math.round(splitMap.getCoverage() * 100) / 100;
+
+
+        assertEquals(0.5, coverage);
     }
 
     public void testQuarterMap() throws Exception{
@@ -113,34 +125,33 @@ public class weatherMapTest extends TestCase {
         quarterMap.writeArray2File(theArray,"QuarterMap");
         quarterMap.updateTestCurrentWeather(theArray,theBound);
 
-        Double coverage = quarterMap.getCoverage();
+        Double coverage = (double) Math.round(quarterMap.getCoverage() * 100) / 100;
 
 
-        assertEquals(0.0, coverage);
+        assertEquals(0.25, coverage);
 
     }
 
     public void testUpdateWeatherArray() throws Exception {
+        Boundary theBound = new Boundary(WIDTH/2,HEIGHT/2,(WIDTH/2)-1);
+        mapOne.addBoundary(theBound);
+        int[][] theArray = getFullMap(Color.RED.getRGB());
+        mapOne.writeArray2File(theArray,"QuarterMap");
+        mapOne.updateTestCurrentWeather(theArray,theBound);
+
+        Double coverage = (double) Math.round(mapOne.getCoverage() * 100) / 100;
+
+
+        assertEquals(1.0, coverage);
+
+        theArray = getSplitMap(Color.RED.getRGB());
+        mapOne.updateTestCurrentWeather(theArray,theBound);
+
+        coverage = (double) Math.round(mapOne.getCoverage() * 100) / 100;
+
+
+        assertEquals(0.5, coverage);
 
     }
 
-    public void testUpdateWeather() throws Exception {
-
-    }
-
-    public void testGetCoverage() throws Exception {
-
-    }
-
-    public void testUpdateBG() throws Exception {
-
-    }
-
-    public void testDrawBound() throws Exception {
-
-    }
-
-    public void testAddBoundary() throws Exception {
-
-    }
 }

@@ -65,9 +65,6 @@ public class BoundaryChecker implements Runnable{
 
         result += (count/size);
 
-/*
-        System.out.println();
-        System.out.println("CurrentCoverage: " + result);*/
         return result;
     }
 
@@ -91,36 +88,23 @@ public class BoundaryChecker implements Runnable{
 
     public double fullCheckOuter(){
 
-        int count = 0;
         double percent = 0.0;
 
         int size = myBoundary.getQuads().length;
 
         for (int i = 0; i < size; i++) {
 
-
-            /*if (checkPercent(this.myBoundary.getQuads()[i]) >= THRESHOLD){
-                count++;
-            }*/
-
-            double temp = checkPercent(myBoundary.getQuads()[i]);
+            double temp = checkPercent(this.myBoundary.getQuads()[i]);
             percent += temp;
-            System.out.println("Coverage at Quad " + i + " : " + temp);
-
-            /*if (count > (size/2)){//greater than 50% coverage
-                
-                i=size;//stop loop here
-            }*/
 
         }
 
         boundChecked = true;
 
-        System.out.println("Current Full Check Coverage: " + percent/8.0);
 
         coveragePercent = percent/8.0;
 
-        return percent;
+        return percent/8.0;
     }
 
     public void updateWeather(int[][] newWeather){
