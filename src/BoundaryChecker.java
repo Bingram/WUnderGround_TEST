@@ -45,6 +45,18 @@ public class BoundaryChecker implements Runnable{
         return myBoundary;
     }
 
+    /**
+     * Iterates through the given PointList
+     * and counting the number of non CLEAR
+     * pixels.
+     *
+     * THRESHOLD is a double that needs to
+     * be set, default is 1.0, this value is
+     * a decimal value with a max of 1.0
+     *
+     * @param theList PointList to iterate
+     * @return Double percent of points not CLEAR
+     */
     private double checkPercent(PointList theList){
         double result = 0.0;
         int size = theList.size();
