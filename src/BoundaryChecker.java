@@ -17,10 +17,6 @@ public class BoundaryChecker implements Runnable{
 
     private int[][] myWeatherArray;
 
-    public Boundary getMyBoundary() {
-        return myBoundary;
-    }
-
     private Boundary myBoundary;
 
     private double coveragePercent;
@@ -45,6 +41,10 @@ public class BoundaryChecker implements Runnable{
 
     }
 
+    public Boundary getMyBoundary() {
+        return myBoundary;
+    }
+
     private double checkPercent(PointList theList){
         double result = 0.0;
         int size = theList.size();
@@ -57,8 +57,10 @@ public class BoundaryChecker implements Runnable{
 
             int pixel = myWeatherArray[p.getMyX()][p.getMyY()];
 
-            if (pixel != CLEAR) {
+            if (pixel != CLEAR && count<=(size/THRESHOLD*10)) {
                 count++;
+            } else if (count>(size/THRESHOLD*10)){//check if Threshold met by mutiplying by 10 to make int
+                i = size;
             }
 
         }
@@ -116,7 +118,7 @@ public class BoundaryChecker implements Runnable{
     }
 
     public void setTHRESHOLD(double newThreshold) {
-        this.THRESHOLD = THRESHOLD;
+        THRESHOLD = newThreshold;
     }
 
     public int getCLEAR() {

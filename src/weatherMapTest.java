@@ -24,6 +24,8 @@ public class weatherMapTest extends TestCase {
     private int WIDTH = 300;
     private int HEIGHT = WIDTH;
 
+    private double THRESHOLD = 1.0;
+
     public void setUp() throws Exception {
         super.setUp();
 
@@ -32,9 +34,10 @@ public class weatherMapTest extends TestCase {
         splitMap = new weatherMap("SPLIT",WIDTH,HEIGHT);
         quarterMap = new weatherMap("QUARTER",WIDTH,HEIGHT);
 
-
-
-
+        mapOne.updateBCThreshold(THRESHOLD);
+        mapTwo.updateBCThreshold(THRESHOLD);
+        splitMap.updateBCThreshold(THRESHOLD);
+        quarterMap.updateBCThreshold(THRESHOLD);
 
     }
 
@@ -64,6 +67,8 @@ public class weatherMapTest extends TestCase {
 
     public int[][] getQuarterMap(int color){
         int[][] temp = getClearMap(CLEAR);
+
+
 
         for (int i = 0; i < WIDTH/2; i++) {
             for (int j = 0; j < HEIGHT/2; j++) {

@@ -341,6 +341,10 @@ public class weatherMap implements Runnable{
         bgURL = theURL;
     }
 
+    public void updateBCThreshold(double newThreshold){
+        boundaryChecker.setTHRESHOLD(newThreshold);
+    }
+
     @Override
     public void run() {
         try {
