@@ -96,21 +96,23 @@ public class weatherMap implements Runnable{
 
         currentWeather = myConverter.get2DArray(clearImage);//update weather array
 
+        boundaryImage = getImageFromURL(bgURL);//update BG Image
+
         if (FakeWeather){
-            modArray(currentWeather);
+            modArray();
         }
 
         boundaryChecker = new BoundaryChecker(myConverter.get2DArray(clearImage),currentBound);
 
         boundaryChecker.updateWeather(myConverter.get2DArray(clearImage));//update boundary checker array
 
-        boundaryImage = getImageFromURL(bgURL);//update BG Image
+
 
         writeImageFile(boundaryImage,bgName);//update current BG file
 
         updateBoundaryImage();//add bounds to current full BG map
 
-        boundaryChecker.run();
+        //boundaryChecker.run();
 
 
     }
@@ -118,15 +120,15 @@ public class weatherMap implements Runnable{
     /**
      * Draw fake weather on array around current
      * boundary for testing
-     * @param weatherArray
+     *
      */
-    private void modArray(int[][] weatherArray) {
-        int[][] temp = weatherArray;
+    private void modArray() {
+        int[][] temp = currentWeather;
         Boundary currentBound = myBoundaries.getBoundary(0);
         int x = currentBound.getMyCenter().getMyX();
         int y = currentBound.getMyCenter().getMyY();
         int radius = currentBound.getMyRadius();
-        int WIDTH = radius*2;
+        int WIDTH = radius;
 
         for (int i = x-WIDTH; i < x+WIDTH; i++) {
             for (int j = y-WIDTH; j < y+WIDTH; j++) {
@@ -145,7 +147,6 @@ public class weatherMap implements Runnable{
                 img = ImageIO.read(new File(fileName + ".png"));
             } catch (IOException e) {
             }
-
 
 
             for (int i = 0; i < theArray.length; i++) {

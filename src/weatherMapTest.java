@@ -18,11 +18,27 @@ public class weatherMapTest extends TestCase {
 
     private BoundaryChecker boundaryChecker;*/
 
-    private weatherMap mapOne,mapTwo,splitMap,quarterMap;
+    private double falseW = 1280.0;
+
+    private static Double myMaxLat = 49.0;//Just North of border WA
+    private static Double myMaxLong = -116.8;//Just East of border WA
+    private static Double myMinLat = 42.6;//Halfway into OR South
+    private static Double myMinLong = -125.5;//A few miles of West coast WA
+
+    private int WAIT_TIME,MINUTES;
+
+    private String BASE_URL = "http://api.wunderground.com/api/abc6b9854cebd997/radar/image.png?maxlat="+ myMaxLat +
+            "&maxlon=" + myMaxLong + "&minlat=" + myMinLat + "&minlon=" + myMinLong + "&width=" + falseW + "&height=" + falseW;
+    private String clearURL = BASE_URL + "&rainsnow=1&reproj.automerc=1";
+    private String bgURL = BASE_URL + "&newmaps=1";
+
+    private weatherMap mapOne,mapTwo,splitMap,quarterMap,falseMap;
 
     private int CLEAR = -16777216;
     private int WIDTH = 300;
     private int HEIGHT = WIDTH;
+    
+
 
     private double THRESHOLD = 1.0;
 
@@ -33,6 +49,7 @@ public class weatherMapTest extends TestCase {
         mapTwo = new weatherMap("TEST_2",WIDTH,HEIGHT);
         splitMap = new weatherMap("SPLIT",WIDTH,HEIGHT);
         quarterMap = new weatherMap("QUARTER",WIDTH,HEIGHT);
+        falseMap = new weatherMap("FALSE", ((int) falseW), ((int) falseW));
 
         mapOne.updateBCThreshold(THRESHOLD);
         mapTwo.updateBCThreshold(THRESHOLD);
@@ -91,6 +108,24 @@ public class weatherMapTest extends TestCase {
         }
 
         return temp;
+    }
+
+    /*
+     *BEGIN TESTS 
+     */
+    
+    public void testFalseCoverage() throws Exception{
+        //410,273
+
+        Boundary theBound = new Boundary(410,273,100);
+        falseMap.addBoundary(theBound);
+        falseMap.setBGURL(bgURL);
+        falseMap.setClearURL(clearURL);
+        falseMap.updateWeather();
+
+        Double coverage = falseMap.getCoverage();
+
+        assertEquals(100.0,coverage);
     }
 
     public void testFullMap() throws Exception{

@@ -100,6 +100,22 @@ public class BoundaryChecker implements Runnable{
 
     }
 
+    public double[] quadCoverage(){
+        double[] result = new double[8];
+
+        for (int i = 0; i < 8; i++) {
+            result[i] = checkPercent(myBoundary.getQuads()[i]);
+
+        }
+
+        return result;
+    }
+
+    /**
+     * Attempts to check all the quadrants of the current boundary
+     * Returning the average coverage of all 8 quads.
+     * @return
+     */
     public double fullCheckOuter(){
 
         double percent = 0.0;
@@ -108,7 +124,7 @@ public class BoundaryChecker implements Runnable{
 
         for (int i = 0; i < size; i++) {
 
-            double temp = checkPercent(this.myBoundary.getQuads()[i]);
+            double temp = checkPercent(myBoundary.getQuads()[i]);
             percent += temp;
 
         }
