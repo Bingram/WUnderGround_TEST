@@ -30,7 +30,7 @@ public class weatherMap implements Runnable{
     private aRGBConverter myConverter;
 
     private BoundaryChecker boundaryChecker;
-    private boolean FakeWeather = true;
+    private boolean FakeWeather = false;
 
     private weatherMap(){
         myImageWidth = 1;
@@ -102,15 +102,17 @@ public class weatherMap implements Runnable{
             modArray();
         }
 
-        boundaryChecker = new BoundaryChecker(myConverter.get2DArray(clearImage),currentBound);
+        boundaryChecker = new BoundaryChecker(currentWeather,currentBound);
 
-        boundaryChecker.updateWeather(myConverter.get2DArray(clearImage));//update boundary checker array
+        boundaryChecker.updateWeather(currentWeather);//update boundary checker array
 
 
 
         writeImageFile(boundaryImage,bgName);//update current BG file
 
         updateBoundaryImage();//add bounds to current full BG map
+
+        boundaryChecker.fullCheckOuter();
 
         //boundaryChecker.run();
 

@@ -1,5 +1,5 @@
 #Weather Radar TEST
-![Radar Base Image](https://raw.githubusercontent.com/Bingram/WUnderGround_TEST/master/CurrentBounds-PNW.png)
+![Radar Base Image](https://raw.githubusercontent.com/Bingram/WUnderGround_TEST/master/CurrentBounds-TEST.png)
 *This is the base image of the current area Weather Radar watches*
 
 ##A backend server for retrieving weather information and determining whether weather is incoming

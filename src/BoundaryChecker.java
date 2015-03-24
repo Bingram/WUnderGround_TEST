@@ -67,7 +67,8 @@ public class BoundaryChecker implements Runnable{
         for (int i = 0; i < size; i++) {
             Point p = (Point)theList.getObject(i);
 
-            int pixel = myWeatherArray[p.getMyX()][p.getMyY()];
+            int pixel;
+            pixel = myWeatherArray[p.myX][p.myY];
 
             if (pixel != CLEAR && count<=(size/THRESHOLD*10)) {
                 count++;
@@ -77,7 +78,7 @@ public class BoundaryChecker implements Runnable{
 
         }
 
-        result += (count/size);
+        result += (count/size)*100.0;
 
         return result;
     }
@@ -125,6 +126,7 @@ public class BoundaryChecker implements Runnable{
         for (int i = 0; i < size; i++) {
 
             double temp = checkPercent(myBoundary.getQuads()[i]);
+            System.out.println("Current Quad: " + i + " Coverage: " + temp);
             percent += temp;
 
         }
@@ -132,9 +134,9 @@ public class BoundaryChecker implements Runnable{
         boundChecked = true;
 
 
-        coveragePercent = percent/8.0;
+        coveragePercent = percent;
 
-        return percent/8.0;
+        return percent;
     }
 
     public void updateWeather(int[][] newWeather){

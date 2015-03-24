@@ -5,7 +5,7 @@ package DataStructures;
  */
 public class Point{
 
-    private int myX, myY;
+    public int myX, myY;
 
     public Point(){
         myX=myY=-1;
