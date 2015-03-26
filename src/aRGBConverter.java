@@ -78,7 +78,7 @@ public class aRGBConverter {
             }
         } else {
             final int pixelLength = 3;
-            for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += pixelLength) {
+            for (int pixel = 0, row = 0, col = 0; pixel + pixelLength < pixels.length; pixel += pixelLength) {
                 int argb = 0;
                 argb += -16777216; // 255 alpha
                 argb += ((int) pixels[pixel] & 0xff); // blue

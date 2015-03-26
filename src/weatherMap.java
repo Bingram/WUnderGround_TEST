@@ -30,7 +30,7 @@ public class weatherMap implements Runnable{
     private aRGBConverter myConverter;
 
     private BoundaryChecker boundaryChecker;
-    private boolean FakeWeather = false;
+    private boolean FakeWeather = true;
 
     private weatherMap(){
         myImageWidth = 1;
@@ -94,7 +94,8 @@ public class weatherMap implements Runnable{
         //TESTING
         writeImageFile(clearImage,clearName);
 
-        currentWeather = myConverter.get2DArray(clearImage);//update weather array
+       // currentWeather = myConverter.get2DArray(clearImage);//update weather array
+        currentWeather = myConverter.convertTo2DWithoutUsingGetRGB(clearImage);
 
         boundaryImage = getImageFromURL(bgURL);//update BG Image
 
@@ -130,7 +131,7 @@ public class weatherMap implements Runnable{
         int x = currentBound.getMyCenter().getMyX();
         int y = currentBound.getMyCenter().getMyY();
         int radius = currentBound.getMyRadius();
-        int WIDTH = radius;
+        int WIDTH = radius*2;
 
         for (int i = x-WIDTH; i < x+WIDTH; i++) {
             for (int j = y-WIDTH; j < y+WIDTH; j++) {
