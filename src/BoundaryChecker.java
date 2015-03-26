@@ -64,11 +64,17 @@ public class BoundaryChecker implements Runnable{
 
         //TODO
 
-        for (int i = 0; i < size; i++) {
-            Point p = (Point)theList.getObject(i);
+        Point p = new Point();
+        int pixel;
 
-            int pixel;
-            pixel = myWeatherArray[p.myX][p.myY];
+        for (int i = 0; i < size; i++) {
+            p = (Point)theList.getObject(i);
+
+
+            int x = p.myX;
+            int y = p.myY;
+
+            pixel = myWeatherArray[y][x];
 
             if (pixel != CLEAR && count<=(size/THRESHOLD*10)) {
                 count++;
