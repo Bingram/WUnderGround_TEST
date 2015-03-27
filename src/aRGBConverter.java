@@ -53,6 +53,20 @@ public class aRGBConverter {
 
     }
 
+    public int[][] convertTo2DBRUTEFORCE(BufferedImage image){
+
+        int[][] temp = new int[image.getWidth()][image.getHeight()];
+
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                temp[y][x] = image.getRGB(x,y);
+
+            }
+        }
+
+        return temp;
+    }
+
     public int[][] convertTo2DWithoutUsingGetRGB(BufferedImage image) {
 
         final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();

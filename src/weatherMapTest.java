@@ -119,6 +119,7 @@ public class weatherMapTest extends TestCase {
         falseMap.addBoundary(theBound);
         falseMap.setBGURL(bgURL);
         falseMap.setClearURL(clearURL);
+        System.out.println(clearURL);
         falseMap.updateWeather();
 
         Double coverage = falseMap.getCoverage();
