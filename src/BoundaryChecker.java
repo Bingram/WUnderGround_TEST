@@ -149,6 +149,10 @@ public class BoundaryChecker implements Runnable{
         myWeatherArray = newWeather;
     }
 
+    public int[][] getWeather(){
+        return myWeatherArray;
+    }
+
     public void setMyBoundary(Boundary theBound){
         myBoundary = theBound;
     }

@@ -127,7 +127,7 @@ public class weatherMapTest extends TestCase {
         assertEquals(100.0,coverage);
     }
 
-    /*public void testFullMap() throws Exception{
+    public void testFullMap() throws Exception{
         Boundary theBound = new Boundary(WIDTH/2,HEIGHT/2,WIDTH/4);
         int[][] redFull = getFullMap(Color.RED.getRGB());
         int[][] blueFull = getFullMap(Color.BLUE.getRGB());
@@ -191,6 +191,6 @@ public class weatherMapTest extends TestCase {
 
         assertEquals(0.5, coverage);
 
-    }*/
+    }
 
 }
