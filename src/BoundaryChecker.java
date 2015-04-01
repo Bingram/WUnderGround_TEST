@@ -76,7 +76,7 @@ public class BoundaryChecker implements Runnable{
 
             pixel = myWeatherArray[y][x];
 
-            if (pixel != CLEAR && count<=(size/THRESHOLD*10)) {
+            if (pixel != CLEAR && pixel != 0) {
                 count++;
             } else if (count>(size/THRESHOLD*10)){//check if Threshold met by mutiplying by 10 to make int
                 i = size;
@@ -140,9 +140,9 @@ public class BoundaryChecker implements Runnable{
         boundChecked = true;
 
 
-        coveragePercent = percent;
+        coveragePercent = percent/8.0;
 
-        return percent;
+        return percent/8.0;
     }
 
     public void updateWeather(int[][] newWeather){
