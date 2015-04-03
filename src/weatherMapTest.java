@@ -35,7 +35,7 @@ public class weatherMapTest extends TestCase {
     private weatherMap mapOne,mapTwo,splitMap,quarterMap,falseMap;
 
     private int CLEAR = -16777216;
-    private int WIDTH = 300;
+    private int WIDTH = 2000;
     private int HEIGHT = WIDTH;
 
     private double THRESHOLD = 1.0;
@@ -112,7 +112,7 @@ public class weatherMapTest extends TestCase {
      *BEGIN TESTS 
      */
     
-    public void testFalseCoverage() throws Exception{
+    /*public void testFalseCoverage() throws Exception{
         //410,273
 
         Boundary theBound = new Boundary(410,273,100);
@@ -125,7 +125,7 @@ public class weatherMapTest extends TestCase {
         Double coverage = falseMap.getCoverage();
 
         assertEquals(100.0,coverage);
-    }
+    }*/
 
     public void testFullMap() throws Exception{
         Boundary theBound = new Boundary(WIDTH/2,HEIGHT/2,WIDTH/4);
@@ -136,12 +136,15 @@ public class weatherMapTest extends TestCase {
         mapOne.writeArray2File(blueFull,"Blue_FULL");
         mapTwo.writeArray2File(redFull,"Red_FULL");
 
-        Double coverage1 = (double) Math.round(mapOne.getCoverage() * 100) / 100;
-        Double coverage2 = (double) Math.round(mapTwo.getCoverage() * 100) / 100;
+       // Double coverage1 = (double) Math.round(mapOne.getCoverage() * 100) / 100;
+       // Double coverage2 = (double) Math.round(mapTwo.getCoverage() * 100) / 100;
+
+        Double coverage1 = mapOne.getCoverage();
+        Double coverage2 = mapTwo.getCoverage();
 
         assertEquals(coverage1, coverage2);
-        assertEquals(1.0, coverage1);
-        assertEquals(1.0, coverage2);
+        assertEquals(100.0, coverage1);
+        assertEquals(100.0, coverage2);
 
     }
 
@@ -151,10 +154,10 @@ public class weatherMapTest extends TestCase {
         splitMap.writeArray2File(theArray,"SplitMap");
         splitMap.updateTestCurrentWeather(theArray,theBound);
 
-        Double coverage = (double) Math.round(splitMap.getCoverage() * 100) / 100;
+//        Double coverage = (double) Math.round(splitMap.getCoverage() * 100) / 100;
+        Double coverage = splitMap.getCoverage();
 
-
-        assertEquals(0.5, coverage);
+        assertEquals(50.0, coverage);
     }
 
     public void testQuarterMap() throws Exception{
@@ -164,10 +167,11 @@ public class weatherMapTest extends TestCase {
         quarterMap.writeArray2File(theArray,"QuarterMap");
         quarterMap.updateTestCurrentWeather(theArray,theBound);
 
-        Double coverage = (double) Math.round(quarterMap.getCoverage() * 100) / 100;
+        //Double coverage = (double) Math.round(quarterMap.getCoverage() * 100) / 100;
 
+        Double coverage = quarterMap.getCoverage();
 
-        assertEquals(0.25, coverage);
+        assertEquals(25.0, coverage);
 
     }
 
@@ -178,18 +182,19 @@ public class weatherMapTest extends TestCase {
         mapOne.writeArray2File(theArray,"QuarterMap");
         mapOne.updateTestCurrentWeather(theArray,theBound);
 
-        Double coverage = (double) Math.round(mapOne.getCoverage() * 100) / 100;
+       // Double coverage = (double) Math.round(mapOne.getCoverage() * 100) / 100;
 
+        Double coverage = mapOne.getCoverage();
 
-        assertEquals(1.0, coverage);
+        assertEquals(100.0, coverage);
 
         theArray = getSplitMap(Color.RED.getRGB());
         mapOne.updateTestCurrentWeather(theArray,theBound);
 
-        coverage = (double) Math.round(mapOne.getCoverage() * 100) / 100;
+        coverage = mapOne.getCoverage();
 
 
-        assertEquals(0.5, coverage);
+        assertEquals(50.0, coverage);
 
     }
 

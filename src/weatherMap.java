@@ -78,10 +78,10 @@ public class weatherMap implements Runnable{
     }
 
     public void updateTestCurrentWeather(int[][] weather, Boundary theBound){
-        currentWeather = weather;
-        boundaryChecker = new BoundaryChecker(currentWeather,theBound);
+        //currentWeather = weather;
+        boundaryChecker = new BoundaryChecker(weather,theBound);
 
-        boundaryChecker.updateWeather(currentWeather);
+        boundaryChecker.updateWeather(weather);
         boundaryChecker.fullCheckOuter();
     }
 
