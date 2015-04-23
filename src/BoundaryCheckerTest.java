@@ -69,7 +69,7 @@ public class BoundaryCheckerTest extends TestCase {
 
         int[][] temp = myChecker.getWeather();
 
-//        assertEquals(temp[256][1000], original[256][1000]);
+        assertEquals(temp[256][1000], original[256][1000]);
 
         assertEquals(temp[1000][1000], bruteVer1[1000][1000]);
 
