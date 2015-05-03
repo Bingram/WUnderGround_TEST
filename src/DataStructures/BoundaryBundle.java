@@ -13,20 +13,51 @@ import java.util.LinkedList;
  */
 public class BoundaryBundle {
 
+    private Boolean DIAG = true;
+
     private static final int LEVELS = 4;
 
     private int mySize = 0;
 
-    //private final int myX, myY;
+    private int myQuadSize = -1;
 
-    //private LinkedList<Boundary> myBoundaries;
+    private int myX, myY;
+
+    private LinkedList<Boundary> myBoundaries;
 
     private Boundary[] myBounds;
 
     public BoundaryBundle(){
 
-        //myBoundaries = new LinkedList<Boundary>();
+        myBoundaries = new LinkedList<Boundary>();
         myBounds = new Boundary[LEVELS];
+        myY=myX=0;
+    }
+
+    public BoundaryBundle(int x, int y){
+
+        myX = x;
+        myY = y;
+
+        myBoundaries = new LinkedList<Boundary>();
+        myBounds = new Boundary[LEVELS];
+    }
+
+    /**
+     * Adds a new boundary to the bundle
+     *
+     * @param theBoundary Boundary object with center and radius
+     */
+    public void addBoundary(Boundary theBoundary){
+
+        if(theBoundary != null){
+            //set values from Boundary
+            myX = theBoundary.getMyCenter().getMyX();
+            myY = theBoundary.getMyCenter().getMyY();
+            int radius = theBoundary.getMyRadius();
+
+            addBoundary(myX, myY, radius);//internal helper
+        }
     }
 
     /**
@@ -38,28 +69,15 @@ public class BoundaryBundle {
     private void addBoundary(int x, int y, int theRadius){
 
         if (theRadius > 0){
-
+            if (DIAG) {
             //make a circle and print number of points in radius
-            System.out.println(this.getClass());
-            System.out.println("Circle created, number of points: " + makeCircle(x,y,theRadius) );
 
-            System.out.println("Circle of size: "+theRadius+" added to Map @ "+x+","+y);
-        }
-    }
+            System.out.println("Boundary created: " + makeCircle(x, y, theRadius));
 
-    /**
-     * Adds a new boundary to the bundle
-     *
-     * @param theBoundary Boundary object with center and radius
-     */
-    public void addBoundary(Boundary theBoundary){
-
-        if(theBoundary != null){
-            int x = theBoundary.getMyCenter().getMyX();
-            int y = theBoundary.getMyCenter().getMyY();
-            int radius = theBoundary.getMyRadius();
-
-            addBoundary(x,y,radius);
+            System.out.println("Boundary of size: " + theRadius + " added to Map @ " + x + "," + y);
+            } else {
+                makeCircle(x,y,theRadius);
+            }
         }
     }
 
@@ -75,7 +93,8 @@ public class BoundaryBundle {
      * @param radius int for radius of circle
      * @return boolean value if circle can be made
      */
-    private boolean makeCircle(final int centerX, final int centerY, final int radius) {
+    private boolean makeCircle( int centerX, int centerY,  int radius) {
+
         boolean result = true;
 
         Boundary newBoundary = new Boundary();
@@ -88,11 +107,44 @@ public class BoundaryBundle {
             newBoundary = new Boundary(centerX, centerY, radius);
         }
 
-        //myBoundaries.add(newBoundary);
-
-        myBounds[mySize++] = newBoundary;
+        myBoundaries.add(newBoundary);
 
         return result;
+    }
+
+    /**
+     */ //** Untested Recursive Loop **//
+    /**
+     * Recursively build 4 levels of Boundary edges
+     *
+     * @param centerX
+     * @param centerY
+     * @param radius
+     * @return
+     */
+
+    private boolean makeQuadrant(int centerX, int centerY,  int radius){
+
+        boolean result = true;
+
+        Boundary newBoundary = new Boundary();
+
+
+        //invalid values of circle
+        if(centerX < 0 || centerY < 0 || radius <=0){
+            result = false;
+        } else {
+            newBoundary = new Boundary(centerX, centerY, radius);
+        }
+
+        if (myQuadSize < 3 && result) {
+            myBounds[myQuadSize++] = newBoundary;
+            makeCircle(centerX,centerY,radius/2);
+        }
+
+        return result;
+
+
     }
 
     public Boundary getBoundary(int level) {

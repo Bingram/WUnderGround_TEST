@@ -2,6 +2,7 @@ import DataStructures.Boundary;
 import junit.framework.TestCase;
 
 import java.awt.*;
+import java.awt.geom.Arc2D;
 
 public class weatherMapTest extends TestCase {
 
@@ -40,6 +41,13 @@ public class weatherMapTest extends TestCase {
 
     private double THRESHOLD = 1.0;
 
+    /**
+     * Setup individual maps for different tests
+     * This Test acts as the WeatherController
+     *
+     *
+     * @throws Exception CATCH ALL THE THINGS!
+     */
     public void setUp() throws Exception {
         super.setUp();
 
@@ -56,8 +64,14 @@ public class weatherMapTest extends TestCase {
 
     }
 
+    /**
+     * Generate a map of given dimensions
+     * using the color passed
+     * @param color color to paint a full map with
+     * @return 2d array of color values
+     */
     public int[][] getFullMap(int color){
-        int[][] temp = getClearMap(CLEAR);
+        int[][] temp = getClearMap();
 
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
@@ -68,12 +82,17 @@ public class weatherMapTest extends TestCase {
         return temp;
     }
 
-    public int[][] getClearMap(int color){
+    /**
+     *
+     * @param color
+     * @return
+     */
+    public int[][] getClearMap(){
         int[][] temp = new int[WIDTH][HEIGHT];
 
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                temp[i][j] = color;
+                temp[i][j] = CLEAR;
             }
         }
 
@@ -81,9 +100,7 @@ public class weatherMapTest extends TestCase {
     }
 
     public int[][] getQuarterMap(int color){
-        int[][] temp = getClearMap(CLEAR);
-
-
+        int[][] temp = getClearMap();
 
         for (int i = 0; i < WIDTH/2; i++) {
             for (int j = 0; j < HEIGHT/2; j++) {
@@ -96,7 +113,7 @@ public class weatherMapTest extends TestCase {
     }
 
     public int[][] getSplitMap(int color){
-        int[][] temp = getClearMap(CLEAR);
+        int[][] temp = getClearMap();
 
         for (int i = 0; i < WIDTH/2; i++) {
             for (int j = 0; j < HEIGHT; j++) {
@@ -112,7 +129,7 @@ public class weatherMapTest extends TestCase {
      *BEGIN TESTS 
      */
     
-    /*public void testFalseCoverage() throws Exception{
+    public void testFalseCoverage() throws Exception{
         //410,273
 
         Boundary theBound = new Boundary(410,273,100);
@@ -125,7 +142,7 @@ public class weatherMapTest extends TestCase {
         Double coverage = falseMap.getCoverage();
 
         assertEquals(100.0,coverage);
-    }*/
+    }
 
     public void testFullMap() throws Exception{
         Boundary theBound = new Boundary(WIDTH/2,HEIGHT/2,WIDTH/4);
@@ -157,7 +174,7 @@ public class weatherMapTest extends TestCase {
 //        Double coverage = (double) Math.round(splitMap.getCoverage() * 100) / 100;
         Double coverage = splitMap.getCoverage();
 
-        assertEquals(50.0, coverage);
+        assertEquals(50.0, (Math.round(coverage)*1.0));
     }
 
     public void testQuarterMap() throws Exception{
@@ -171,7 +188,7 @@ public class weatherMapTest extends TestCase {
 
         Double coverage = quarterMap.getCoverage();
 
-        assertEquals(25.0, coverage);
+        assertEquals(25.0, (Math.round(coverage)*1.0));
 
     }
 
@@ -186,7 +203,7 @@ public class weatherMapTest extends TestCase {
 
         Double coverage = mapOne.getCoverage();
 
-        assertEquals(100.0, coverage);
+        assertEquals(100.0, (Math.round(coverage)*1.0));
 
         theArray = getSplitMap(Color.RED.getRGB());
         mapOne.updateTestCurrentWeather(theArray,theBound);
@@ -194,7 +211,7 @@ public class weatherMapTest extends TestCase {
         coverage = mapOne.getCoverage();
 
 
-        assertEquals(50.0, coverage);
+        assertEquals(50.0, (Math.round(coverage)*1.0));
 
     }
 

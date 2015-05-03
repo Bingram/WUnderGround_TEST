@@ -8,13 +8,12 @@ public class Boundary {
 
     private final Point myCenter;
     private final int myRadius;
-    private int myPointCount;
 
     private final String myName;
 
-    private Quadrant[] myQuads = new Quadrant[8];//quadrants of the boundary
+    private PointList[] myQuads = new PointList[8];//quadrants of the boundary
 
-    //private PointList myPoints = new PointList();//all the points contained in a circle
+    private PointList myPoints = new PointList();//all the points contained in a circle
 
     /**
      * Blank Boundary with default values
@@ -63,7 +62,7 @@ public class Boundary {
      */
     private void quadSetup(){
         for (int i = 0; i < 8; i++) {
-            myQuads[i] = new Quadrant();
+            myQuads[i] = new PointList();
         }
     }
 
@@ -89,14 +88,14 @@ public class Boundary {
 
             //Creates a clockwise order of points
             //relative to position
-            myQuads[0].getLevel0().addLIFO(p0);
-            myQuads[1].getLevel0().addLIFO(p1);
-            myQuads[2].getLevel0().addLIFO(p2);
-            myQuads[3].getLevel0().addLIFO(p3);
-            myQuads[4].getLevel0().addLIFO(p4);
-            myQuads[5].getLevel0().addLIFO(p5);
-            myQuads[6].getLevel0().addLIFO(p6);
-            myQuads[7].getLevel0().addLIFO(p7);
+            myQuads[0].addLIFO(p0);
+            myQuads[1].addLIFO(p1);
+            myQuads[2].addLIFO(p2);
+            myQuads[3].addLIFO(p3);
+            myQuads[4].addLIFO(p4);
+            myQuads[5].addLIFO(p5);
+            myQuads[6].addLIFO(p6);
+            myQuads[7].addLIFO(p7);
 
             if (d < 0) {
                 d += 2 * x + 1;
