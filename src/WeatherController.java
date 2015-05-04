@@ -21,29 +21,42 @@ public class WeatherController implements Runnable{
     private String clearURL = BASE_URL + "&rainsnow=1&reproj.automerc=1";
     private String bgURL = BASE_URL + "&newmaps=1";
 
-    private Point myPoint;
-
-    private weatherMap myWeatherMap;
+    protected weatherMap myWeatherMap;
 
     public WeatherController(String name){
         myWeatherMap = new weatherMap(name,MAPDIMENSION.intValue(),MAPDIMENSION.intValue());
         myWeatherMap.setClearURL(clearURL);
         myWeatherMap.setBGURL(bgURL);
-        myPoint = new Point();
-        MINUTES = 10;
-        WAIT_TIME = MINUTES*60*1000;
+
+        setWaitTime(10);//number of minutes between updates
     }
 
+    /**
+     * Accepts the boundary radius and center point coords
+     * using latitude and longitude Double values.
+     *
+     * Converts the center point to integer values and passes
+     * to the integer boundary setter.
+     *
+     * @param theLong Double value of Longitude
+     * @param theLat Double value of Latitude
+     * @param theRadius Integer value radius size
+     */
     public void setBoundary(double theLong, double theLat, int theRadius){
         Point tempPoint = gpsToXY(theLong,theLat);
 
-        if (theRadius > 100){theRadius = 100;}//ensure radius is no more than 100
-
-        Boundary temp = new Boundary(tempPoint.getMyY(),tempPoint.getMyX(),theRadius);
-
-        myWeatherMap.addBoundary(temp);
+        setINTBoundary(tempPoint.getMyX(),tempPoint.getMyY(),theRadius);
     }
 
+    /**
+     * Sets boundary values, in integer math, of center and radius
+     *
+     * Radius is currently limited to 100.
+     *
+     * @param theX Integer value of center X
+     * @param theY Integer value of center Y
+     * @param theRadius Integer value of radius size
+     */
     public void setINTBoundary(int theX, int theY, int theRadius){
 
         if (theRadius > 100){theRadius = 100;}//ensure radius is no more than 100
@@ -53,7 +66,7 @@ public class WeatherController implements Runnable{
         myWeatherMap.addBoundary(temp);
     }
 
-    /*The scale for lat is 1' for ~111,000m@4decimals
+    /**The scale for lat is 1' for ~111,000m@4decimals
     * The scale for long is 1' for ~76,000m@5decimals
     * .0001' lat = 11.1m~33ft
     * .00001' long = 0.76m~2.28ft
@@ -93,10 +106,6 @@ public class WeatherController implements Runnable{
 
 
                 myWeatherMap.run();
-
-
-                System.out.println();
-                System.out.println("Current Coverage % : "+myWeatherMap.getCoverage());
 
 
                 Thread.sleep(WAIT_TIME);//sleep 10 minutes

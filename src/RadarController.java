@@ -15,12 +15,10 @@ public class RadarController {
     private int quadDirection;
 
     private QuadChecker quadMonitor;
+    private WeatherController mapController;
 
     private weatherMap mapModel;
 
-    /**
-     * Control loops for updating both models
-     */
 
 
 

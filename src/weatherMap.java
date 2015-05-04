@@ -19,7 +19,7 @@ import java.net.URL;
 public class weatherMap implements Runnable{
 
     private int[][] currentWeather;
-    private BoundaryBundle myBoundaries;
+    //private BoundaryBundle myBoundaries;
     private int myImageWidth,myImageHeight;
     private BufferedImage boundaryImage;
 
@@ -29,7 +29,7 @@ public class weatherMap implements Runnable{
 
     private aRGBConverter myConverter;
 
-    private BoundaryChecker boundaryChecker;
+    //private BoundaryChecker boundaryChecker;
     private boolean FakeWeather = false;
 
     private weatherMap(){
@@ -37,8 +37,8 @@ public class weatherMap implements Runnable{
         myImageHeight = 1;
         currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
-        boundaryChecker = new BoundaryChecker();
-        myBoundaries = new BoundaryBundle();
+        //boundaryChecker = new BoundaryChecker();
+        //myBoundaries = new BoundaryBundle();
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = "BLANK";
         bgName = mapName + "-BG";
@@ -50,8 +50,8 @@ public class weatherMap implements Runnable{
         myImageHeight = theHeight;
         currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
-        boundaryChecker = new BoundaryChecker();
-        myBoundaries = new BoundaryBundle();
+        //boundaryChecker = new BoundaryChecker();
+        //myBoundaries = new BoundaryBundle();
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = theName;
         bgName = mapName + "-BG";
@@ -70,7 +70,7 @@ public class weatherMap implements Runnable{
 
         currentWeather = myConverter.get2DArray(tempImage);
 
-        boundaryChecker.updateWeather(currentWeather);
+        //boundaryChecker.updateWeather(currentWeather);
 
         //TESTING
         writeImageFile(tempImage,clearName);
@@ -79,16 +79,16 @@ public class weatherMap implements Runnable{
 
     public void updateTestCurrentWeather(int[][] weather, Boundary theBound){
         //currentWeather = weather;
-        boundaryChecker = new BoundaryChecker(weather,theBound);
+        //boundaryChecker = new BoundaryChecker(weather,theBound);
 
-        boundaryChecker.updateWeather(weather);
-        boundaryChecker.fullCheckOuter();
+        //boundaryChecker.updateWeather(weather);
+        //boundaryChecker.fullCheckOuter();
     }
 
     public void updateWeather() throws IOException{
         BufferedImage clearImage = getImageFromURL(clearURL);//get latest clear image
 
-        Boundary currentBound = myBoundaries.getBoundary(0);
+        //Boundary currentBound = myBoundaries.getBoundary(0);
 
 
         //TESTING
@@ -103,15 +103,15 @@ public class weatherMap implements Runnable{
             modArray();
         }
 
-        boundaryChecker = new BoundaryChecker(currentWeather,currentBound);
+        //boundaryChecker = new BoundaryChecker(currentWeather,currentBound);
 
-        boundaryChecker.updateWeather(currentWeather);//update boundary checker array
+        //boundaryChecker.updateWeather(currentWeather);//update boundary checker array
 
         writeImageFile(boundaryImage,bgName);//update current BG file
 
         updateBoundaryImage();//add bounds to current full BG map
 
-        boundaryChecker.fullCheckOuter();
+        //boundaryChecker.fullCheckOuter();
 
         //boundaryChecker.run();
 
