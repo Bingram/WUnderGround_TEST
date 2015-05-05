@@ -1,5 +1,7 @@
-import DataStructures.*;
+import DataStructures.Boundary;
+import DataStructures.Node;
 import DataStructures.Point;
+import DataStructures.PointList;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,47 +13,35 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * Created by Brian on 2/12/2015.
- *
- * An object that can retrieve and analyze current weather
- * conditions relative to a Boundary area as chosen by user
+ * Created by Brian on 5/4/2015.
  */
-public class weatherMap implements Runnable{
+public class RadarMap implements Runnable {
 
     private int[][] currentWeather;
-    //private BoundaryBundle myBoundaries;
     private int myImageWidth,myImageHeight;
     private BufferedImage boundaryImage;
-
     private String bgURL,clearURL;
-
     private String mapName,bgName,clearName;
-
     private aRGBConverter myConverter;
 
-    //private BoundaryChecker boundaryChecker;
-    private boolean FakeWeather = false;
-
-    private weatherMap(){
+    private RadarMap(){
         myImageWidth = 1;
         myImageHeight = 1;
         currentWeather = new int[myImageWidth][myImageHeight];
+
         myConverter = new aRGBConverter();
-        //boundaryChecker = new BoundaryChecker();
-        //myBoundaries = new BoundaryBundle();
+
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = "BLANK";
         bgName = mapName + "-BG";
         clearName = mapName + "-CLEAR";
     }
 
-    public weatherMap(String theName, int theWidth, int theHeight){
+    public RadarMap(String theName, int theWidth, int theHeight){
         myImageWidth = theWidth;
         myImageHeight = theHeight;
         currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
-        //boundaryChecker = new BoundaryChecker();
-        //myBoundaries = new BoundaryBundle();
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = theName;
         bgName = mapName + "-BG";
@@ -70,82 +60,40 @@ public class weatherMap implements Runnable{
 
         currentWeather = myConverter.get2DArray(tempImage);
 
-        //boundaryChecker.updateWeather(currentWeather);
-
-        //TESTING
         writeImageFile(tempImage,clearName);
 
     }
 
-    public void updateTestCurrentWeather(int[][] weather, Boundary theBound){
-        //currentWeather = weather;
-        //boundaryChecker = new BoundaryChecker(weather,theBound);
-
-        //boundaryChecker.updateWeather(weather);
-        //boundaryChecker.fullCheckOuter();
-    }
 
     public void updateWeather() throws IOException{
         BufferedImage clearImage = getImageFromURL(clearURL);//get latest clear image
 
-        //Boundary currentBound = myBoundaries.getBoundary(0);
-
-
         //TESTING
         writeImageFile(clearImage,clearName);
 
-       // currentWeather = myConverter.get2DArray(clearImage);//update weather array
         currentWeather = myConverter.convertTo2DBRUTEFORCE(clearImage);
 
         boundaryImage = getImageFromURL(bgURL);//update BG Image
 
-        /*if (FakeWeather){
-            modArray();
-        }*/
-
-        //boundaryChecker = new BoundaryChecker(currentWeather,currentBound);
-
-        //boundaryChecker.updateWeather(currentWeather);//update boundary checker array
-
         writeImageFile(boundaryImage,bgName);//update current BG file
-
-        //updateBoundaryImage();//add bounds to current full BG map
-
-        //boundaryChecker.fullCheckOuter();
-
-        //boundaryChecker.run();
-
 
     }
 
     /**
-     * Draw fake weather on array around current
-     * boundary for testing
+     * Diagnostic testing for printing current array model
+     * to an image file, as opposed to the buffered image
+     * pulled from the URL.
      *
-    private void modArray() {
-        int[][] temp = currentWeather;
-        Boundary currentBound = myBoundaries.getBoundary(0);
-        int x = currentBound.getMyCenter().getMyX();
-        int y = currentBound.getMyCenter().getMyY();
-        int radius = currentBound.getMyRadius();
-        int WIDTH = radius*2;
-
-        for (int i = x-WIDTH; i < x+WIDTH; i++) {
-            for (int j = y-WIDTH; j < y+WIDTH; j++) {
-                temp[i][j] = Color.BLUE.getRGB();
-                boundaryImage.setRGB(i, j, Color.BLUE.getRGB());
-            }
-        }
-
-
-    }*/
-
+     * @param theArray 2D array to be printed
+     * @param fileName Name of resulting image file (no ext.)
+     */
     public void writeArray2File(int[][] theArray, String fileName){
         try {
             BufferedImage img = new BufferedImage(theArray.length,theArray.length,BufferedImage.TYPE_INT_ARGB);
             try {
                 img = ImageIO.read(new File(fileName + ".png"));
             } catch (IOException e) {
+                System.out.println("EXCEPTION - Reading File: " + e);
             }
 
 
@@ -160,13 +108,9 @@ public class weatherMap implements Runnable{
             File outputfile = new File(fileName + ".png");
             ImageIO.write(img, "png", outputfile);
         } catch (IOException e) {
+            System.out.println("EXCEPTION - Writing File: " + e);
         }
     }
-
-
-    /*public double getCoverage(){
-        return boundaryChecker.getCoveragePercent();
-    }*/
 
     /**
      * Updates the current weather imagery with full BG
@@ -180,11 +124,7 @@ public class weatherMap implements Runnable{
 
         writeImageFile(boundaryImage,bgName);//update current BG file
 
-        //updateBoundaryImage();//add bounds to current full BG map
-
     }
-
-
 
     /**
      * Accepts a given URL and retrieves the image returned as a Buffered Image
@@ -197,8 +137,8 @@ public class weatherMap implements Runnable{
 
         BufferedImage tempImage = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
 
-
-        //TODO add filtering for wunderground URL only? OR leave vanilla?
+        // add filtering for wunderground URL only? OR leave vanilla?
+        // Leave Vanilla
         try {
 
             URL imageURL = new URL(theUrl);
@@ -216,26 +156,8 @@ public class weatherMap implements Runnable{
     }
 
     /**
-     * Draw outer boundary for current Bundle
-     */
-    /*private void updateBoundaryImage(){
-
-
-        drawBound(myBoundaries.getBoundary(0));
-
-        try {
-
-            writeImageFile(boundaryImage,"CurrentBounds-" + mapName);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-    }*/
-
-    /**
      * Draws a boundary on the boundaryImage BufferedImage
+     * Diagnostic for now
      *
      * @param theBound Boundary to draw on BufferedImage of map
      */
@@ -267,20 +189,11 @@ public class weatherMap implements Runnable{
 
     }
 
-    //temporary limitation of 100 px radius
-    /*public void addBoundary(Boundary theBound){
-
-        myBoundaries.addBoundary(theBound);
-        boundaryChecker.setMyBoundary(theBound);
-
-    }*/
-
-
     /**
      * Write a given BufferedImage to a file with the String fileName
      *
      * @param theImage BufferedImage to write to file
-     * @param fileName String of file name to write
+     * @param fileName String of file name to write (no ext.)
      * @throws IOException
      */
     public void writeImageFile(BufferedImage theImage,String fileName) throws IOException{
@@ -289,8 +202,6 @@ public class weatherMap implements Runnable{
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(theImage, "png", baos );
-
-            //Persist - in this case to a file for later reference
 
             FileOutputStream fos = new FileOutputStream(imageFile);
             baos.writeTo(fos);
@@ -305,8 +216,9 @@ public class weatherMap implements Runnable{
 
     /**
      * Reads a given file and returns a BufferedImage of the file
+     * Accepts full filename as file is assumed to be in root
      *
-     * @param fileName String of file name to read
+     * @param fileName String of full path to file
      * @return BufferedImage of file
      * @throws IOException
      */
@@ -328,32 +240,6 @@ public class weatherMap implements Runnable{
         return temp;
     }
 
-    /**
-     * Does this do a deep copy?
-     *
-     * @param theImage BufferedImage to copy?
-     * @return BufferedImage deep copy?
-     */
-    private BufferedImage copyImage(BufferedImage theImage){
-        BufferedImage temp = new BufferedImage(myImageWidth,myImageHeight, theImage.getType());
-
-        int row,col,width,height;
-        width = theImage.getWidth();
-        height = theImage.getHeight();
-
-        for(row = col = 0; row < height; ){
-            temp.setRGB(row,col, theImage.getRGB(row,col));
-            col++;
-            if(col == width){
-                col = 0;
-                row++;
-            }
-
-        }
-
-        return temp;
-    }
-
     public int getMyImageWidth() {
         return myImageWidth;
     }
@@ -369,10 +255,6 @@ public class weatherMap implements Runnable{
     public void setBGURL(String theURL) {
         bgURL = theURL;
     }
-
-    /*public void updateBCThreshold(double newThreshold){
-        boundaryChecker.setTHRESHOLD(newThreshold);
-    }*/
 
     @Override
     public void run() {

@@ -74,7 +74,7 @@ public class BoundaryBundle {
 
             System.out.println("Boundary created: " + makeCircle(x, y, theRadius));
 
-            System.out.println("Boundary of size: " + theRadius + " added to Map @ " + x + "," + y);
+            System.out.println("Boundary of size: " + theRadius + " added to RadarMap @ " + x + "," + y);
             } else {
                 makeCircle(x,y,theRadius);
             }
