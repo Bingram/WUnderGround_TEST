@@ -17,7 +17,7 @@ public class RadarController implements Runnable {
     private QuadChecker quadMonitor;
     private WeatherController mapController;
 
-    private weatherMap mapModel;
+    private RadarMap mapModel;
 
 
     private final Double MAPDIMENSION = 1280.0;
@@ -34,8 +34,23 @@ public class RadarController implements Runnable {
     private String bgURL = BASE_URL + "&newmaps=1";
 
 
+    /**
+     * Contstructs a RadarMap Controller
+     * to update image information
+     * @param name
+     * @param mapDimension
+     * @param updateWait
+     */
+    public RadarController(String name, Double mapDimension, int updateWait){
+        mapModel = new RadarMap(name,mapDimension.intValue(),mapDimension.intValue());
+        mapModel.setClearURL(clearURL);
+        mapModel.setBGURL(bgURL);
+
+        setWaitTime(updateWait);//number of minutes between updates
+    }
+
     public RadarController(String name){
-        mapModel = new weatherMap(name,MAPDIMENSION.intValue(),MAPDIMENSION.intValue());
+        mapModel = new RadarMap(name,MAPDIMENSION.intValue(),MAPDIMENSION.intValue());
         mapModel.setClearURL(clearURL);
         mapModel.setBGURL(bgURL);
 

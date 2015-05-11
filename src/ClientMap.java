@@ -13,60 +13,40 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * Created by Brian on 5/4/2015.
+ * Created by Brian on 5/10/2015.
  *
- * Updates the current radar information
- * Array is generated upon BufferedImage update
+ * Client side version of the image/map updater
+ *
+ * This class will interact with the server to retrieve
+ * the current imagery information.
+ *
+ * Ideally there wil be a check of the file timestamp
+ * prior to actually grabbing the iamge from the server.
+ *
+ * This should save some time and ensure that the server
+ * doesn't get slammed by multiple image requests if clients
+ * are out of sync with server update schedule.
  */
-public class RadarMap implements Runnable {
+public class ClientMap implements Runnable{
 
     private int[][] currentWeather;
     private int myImageWidth,myImageHeight;
-    private BufferedImage boundaryImage;
+    private BufferedImage weatherImage,fullImage;
     private String bgURL,clearURL;
     private String mapName,bgName,clearName;
     private aRGBConverter myConverter;
 
-    private RadarMap(){
-        myImageWidth = 1;
-        myImageHeight = 1;
-        currentWeather = new int[myImageWidth][myImageHeight];
-
-        myConverter = new aRGBConverter();
-
-        boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
-        mapName = "BLANK";
-        bgName = mapName + "-BG";
-        clearName = mapName + "-CLEAR";
-    }
-
-    public RadarMap(String theName, int theWidth, int theHeight){
+    public ClientMap(String theName, int theWidth, int theHeight){
         myImageWidth = theWidth;
         myImageHeight = theHeight;
         currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
-        boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
+        weatherImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
+        fullImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = theName;
         bgName = mapName + "-BG";
         clearName = mapName + "-CLEAR";
     }
-
-    /**
-     * Updates the current weather array used to for bounds checking
-     *
-     * @param theUrl String for the URL of a clear weather map
-     * @throws IOException when file or URL grab encounters an error
-     */
-    public void updateWeatherArray(String theUrl) throws IOException {
-
-        BufferedImage tempImage = getImageFromURL(theUrl);
-
-        currentWeather = myConverter.get2DArray(tempImage);
-
-        writeImageFile(tempImage,clearName);
-
-    }
-
 
     public void updateWeather() throws IOException{
         BufferedImage clearImage = getImageFromURL(clearURL);//get latest clear image
@@ -76,9 +56,23 @@ public class RadarMap implements Runnable {
 
         currentWeather = myConverter.convertTo2DBRUTEFORCE(clearImage);
 
-        boundaryImage = getImageFromURL(bgURL);//update BG Image
+        weatherImage = getImageFromURL(bgURL);//update BG Image
 
-        writeImageFile(boundaryImage,bgName);//update current BG file
+        writeImageFile(weatherImage,bgName);//update current BG file
+
+    }
+
+    /**
+     * Updates the current weather imagery with full BG
+     *
+     * @param theUrl String for the URL of a full BG weather map
+     * @throws IOException when file or URL grab encounters an error
+     */
+    public void updateBG(String theUrl) throws IOException {
+
+        fullImage = getImageFromURL(theUrl);//update Buffered Image
+
+        writeImageFile(fullImage,bgName);//update current BG file
 
     }
 
@@ -116,20 +110,6 @@ public class RadarMap implements Runnable {
     }
 
     /**
-     * Updates the current weather imagery with full BG
-     *
-     * @param theUrl String for the URL of a full BG weather map
-     * @throws IOException when file or URL grab encounters an error
-     */
-    public void updateBG(String theUrl) throws IOException {
-
-        boundaryImage = getImageFromURL(theUrl);//update Buffered Image
-
-        writeImageFile(boundaryImage,bgName);//update current BG file
-
-    }
-
-    /**
      * Accepts a given URL and retrieves the image returned as a Buffered Image
      *
      * @param theUrl String of the URL to retrieve image
@@ -159,40 +139,6 @@ public class RadarMap implements Runnable {
     }
 
     /**
-     * Draws a boundary on the boundaryImage BufferedImage
-     * Diagnostic for now
-     *
-     * @param theBound Boundary to draw on BufferedImage of map
-     */
-    public void drawBound(Boundary theBound) {
-
-        PointList thePoints = theBound.getMyPoints();
-
-        Node current = thePoints.getNode(0);
-
-        while(current.getMyNext() != null){
-            Point p = (Point)current.getMyItem();
-
-            int x = p.getMyX();
-            int y = p.getMyY();
-
-            try {
-
-                boundaryImage.setRGB(x, y, Color.RED.getRGB());
-
-            } catch (Exception e){
-                System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
-                        "encountered an Error \nERROR:: " + e.toString());
-
-            }
-
-            current = current.getMyNext();
-
-        }
-
-    }
-
-    /**
      * Write a given BufferedImage to a file with the String fileName
      *
      * @param theImage BufferedImage to write to file
@@ -218,13 +164,48 @@ public class RadarMap implements Runnable {
     }
 
     /**
+     * Draws a boundary on the weatherImage BufferedImage
+     * Diagnostic for now
+     *
+     * @param //theBound Boundary to draw on BufferedImage of map
+     *//*
+    public void drawBound(Boundary theBound) {
+
+        PointList thePoints = theBound.getMyPoints();
+
+        Node current = thePoints.getNode(0);
+
+        while(current.getMyNext() != null){
+            Point p = (Point)current.getMyItem();
+
+            int x = p.getMyX();
+            int y = p.getMyY();
+
+            try {
+
+                weatherImage.setRGB(x, y, Color.RED.getRGB());
+
+            } catch (Exception e){
+                System.err.println(this.getClass()+" call to "+ this.getClass().getEnclosingMethod() +
+                        "encountered an Error \nERROR:: " + e.toString());
+
+            }
+
+            current = current.getMyNext();
+
+        }
+
+    }*/
+
+    /*
+    *//**
      * Reads a given file and returns a BufferedImage of the file
      * Accepts full filename as file is assumed to be in root
      *
-     * @param fileName String of full path to file
+     * //@param fileName String of full path to file
      * @return BufferedImage of file
      * @throws IOException
-     */
+     *//*
     public BufferedImage readImageFile(String fileName) throws IOException{
 
         BufferedImage temp = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
@@ -241,7 +222,7 @@ public class RadarMap implements Runnable {
         }
 
         return temp;
-    }
+    }*/
 
     public int getMyImageWidth() {
         return myImageWidth;
