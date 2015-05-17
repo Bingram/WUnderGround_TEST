@@ -1,23 +1,25 @@
 import DataStructures.Boundary;
+import DataStructures.BoundaryBundle;
 import junit.framework.TestCase;
 
 import java.awt.*;
 import java.awt.geom.Arc2D;
+import java.awt.image.BufferedImage;
 
 public class weatherMapTest extends TestCase {
 
-    /*private int[][] currentWeather;
+    private int[][] currentWeather;
     private BoundaryBundle myBoundaries;
     private int myImageWidth,myImageHeight;
     private BufferedImage boundaryImage;
 
-    private String bgURL,clearURL;
+    //private String bgURL,clearURL;
 
     private String mapName,bgName,clearName;
 
     private aRGBConverter myConverter;
 
-    private BoundaryChecker boundaryChecker;*/
+    private BoundaryChecker boundaryChecker;
 
     private double falseW = 1280.0;
 

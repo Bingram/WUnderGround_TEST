@@ -19,7 +19,7 @@ import java.net.URL;
 public class weatherMap implements Runnable{
 
     private int[][] currentWeather;
-    //private BoundaryBundle myBoundaries;
+    private BoundaryBundle myBoundaries;
     private int myImageWidth,myImageHeight;
     private BufferedImage boundaryImage;
 
@@ -29,7 +29,7 @@ public class weatherMap implements Runnable{
 
     private aRGBConverter myConverter;
 
-    //private BoundaryChecker boundaryChecker;
+    private BoundaryChecker boundaryChecker;
     private boolean FakeWeather = false;
 
     private weatherMap(){
@@ -37,8 +37,8 @@ public class weatherMap implements Runnable{
         myImageHeight = 1;
         currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
-        //boundaryChecker = new BoundaryChecker();
-        //myBoundaries = new BoundaryBundle();
+        boundaryChecker = new BoundaryChecker();
+        myBoundaries = new BoundaryBundle();
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = "BLANK";
         bgName = mapName + "-BG";
@@ -50,8 +50,8 @@ public class weatherMap implements Runnable{
         myImageHeight = theHeight;
         currentWeather = new int[myImageWidth][myImageHeight];
         myConverter = new aRGBConverter();
-        //boundaryChecker = new BoundaryChecker();
-        //myBoundaries = new BoundaryBundle();
+        boundaryChecker = new BoundaryChecker();
+        myBoundaries = new BoundaryBundle();
         boundaryImage = new BufferedImage(myImageWidth,myImageHeight, BufferedImage.TYPE_INT_ARGB);
         mapName = theName;
         bgName = mapName + "-BG";
@@ -70,31 +70,42 @@ public class weatherMap implements Runnable{
 
         currentWeather = myConverter.get2DArray(tempImage);
 
-        //boundaryChecker.updateWeather(currentWeather);
+        boundaryChecker.updateWeather(currentWeather);
 
         //TESTING
         writeImageFile(tempImage,clearName);
 
     }
 
+    /**
+     * Update method for WeatherMapTest
+     * //TODO Remove or replace this method
+     * @param weather
+     * @param theBound
+     */
     public void updateTestCurrentWeather(int[][] weather, Boundary theBound){
-        //currentWeather = weather;
-        //boundaryChecker = new BoundaryChecker(weather,theBound);
+        currentWeather = weather;
+        boundaryChecker = new BoundaryChecker(weather,theBound);
 
-        //boundaryChecker.updateWeather(weather);
-        //boundaryChecker.fullCheckOuter();
+        boundaryChecker.updateWeather(weather);
+        boundaryChecker.fullCheckOuter();
     }
 
+    /**
+     * Main update method that works in the WeatherController currently
+     * //TODO Update or replace method
+     * @throws IOException
+     */
     public void updateWeather() throws IOException{
         BufferedImage clearImage = getImageFromURL(clearURL);//get latest clear image
 
-        //Boundary currentBound = myBoundaries.getBoundary(0);
+        Boundary currentBound = myBoundaries.getBoundary(0);
 
 
         //TESTING
         writeImageFile(clearImage,clearName);
 
-       // currentWeather = myConverter.get2DArray(clearImage);//update weather array
+       // currentWeather = myConverter.get2DArray(clearImage);//update weather array old method
         currentWeather = myConverter.convertTo2DBRUTEFORCE(clearImage);
 
         boundaryImage = getImageFromURL(bgURL);//update BG Image
@@ -103,17 +114,17 @@ public class weatherMap implements Runnable{
             modArray();
         }*/
 
-        //boundaryChecker = new BoundaryChecker(currentWeather,currentBound);
+        boundaryChecker = new BoundaryChecker(currentWeather,currentBound);
 
-        //boundaryChecker.updateWeather(currentWeather);//update boundary checker array
+        boundaryChecker.updateWeather(currentWeather);//update boundary checker array
 
         writeImageFile(boundaryImage,bgName);//update current BG file
 
-        //updateBoundaryImage();//add bounds to current full BG map
+        updateBoundaryImage();//add bounds to current full BG map
 
-        //boundaryChecker.fullCheckOuter();
+        boundaryChecker.fullCheckOuter();
 
-        //boundaryChecker.run();
+        boundaryChecker.run();
 
 
     }
@@ -164,9 +175,9 @@ public class weatherMap implements Runnable{
     }
 
 
-    /*public double getCoverage(){
+    public double getCoverage(){
         return boundaryChecker.getCoveragePercent();
-    }*/
+    }
 
     /**
      * Updates the current weather imagery with full BG
@@ -180,7 +191,7 @@ public class weatherMap implements Runnable{
 
         writeImageFile(boundaryImage,bgName);//update current BG file
 
-        //updateBoundaryImage();//add bounds to current full BG map
+        updateBoundaryImage();//add bounds to current full BG map
 
     }
 
@@ -218,10 +229,14 @@ public class weatherMap implements Runnable{
     /**
      * Draw outer boundary for current Bundle
      */
-    /*private void updateBoundaryImage(){
+    private void updateBoundaryImage() {
 
 
-        drawBound(myBoundaries.getBoundary(0));
+        if (myBoundaries.getBoundary(0) != null){
+            drawBound(myBoundaries.getBoundary(0));
+        }
+
+
 
         try {
 
@@ -232,7 +247,7 @@ public class weatherMap implements Runnable{
             e.printStackTrace();
         }
         
-    }*/
+    }
 
     /**
      * Draws a boundary on the boundaryImage BufferedImage
@@ -268,12 +283,12 @@ public class weatherMap implements Runnable{
     }
 
     //temporary limitation of 100 px radius
-    /*public void addBoundary(Boundary theBound){
+    public void addBoundary(Boundary theBound){
 
         myBoundaries.addBoundary(theBound);
         boundaryChecker.setMyBoundary(theBound);
 
-    }*/
+    }
 
 
     /**
@@ -370,9 +385,9 @@ public class weatherMap implements Runnable{
         bgURL = theURL;
     }
 
-    /*public void updateBCThreshold(double newThreshold){
+    public void updateBCThreshold(double newThreshold){
         boundaryChecker.setTHRESHOLD(newThreshold);
-    }*/
+    }
 
     @Override
     public void run() {
